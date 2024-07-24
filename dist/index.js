@@ -7,8 +7,10 @@ const ROIDS_JAG = 0.4; //jaggedness of the asteroid (0 = none, 1 = lots)
 const ROIDS_SIZE = 100; //starting size of asteroids in pixels
 const ROIDS_SPD = 50; //max starting speed of asteroids in pixels per second 
 const ROIDS_VERT = 10; //average number of verticles on each asteroid 
-const SHOW_BOUNDING = true; //show or hide collision bounding 
+const SHIP_EXPODE_DUR = 0.3; //duratioin of the ship's explosion 
+const SHOW_BOUNDING = false; //show or hide collision bounding 
 const SHOW_CENTRE_DOT = false; //show or hide ship's center dot 
+let shipExploded = false;
 const canv = document.getElementById("gameCanvas");
 const ctx = canv.getContext("2d");
 //pew object
@@ -20,6 +22,7 @@ const pew = {
     w: PEW_SIZE,
     r: PEW_SIZE / 2, //radius
     // a: 90 / 180 * Math.PI //convert to radian of 90 degrees 
+    explodeTime: 0,
 };
 //set up asteriod object 
 let roids = [];
@@ -29,6 +32,8 @@ let clickedRectangle = null; //position of clicked rec (if x and y number else n
 setInterval(base, 1000 / FPS);
 canv.addEventListener("click", handleCanvasClick);
 function handleCanvasClick(ev) {
+    if (shipExploded)
+        return;
     ev.preventDefault();
     // calculate the position on the canvas
     const rectX = ev.clientX - canv.getBoundingClientRect().left;
@@ -52,6 +57,22 @@ function distanceBtwPts(x1, y1, x2, y2) {
     //for buffer zone
     return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
 }
+function explodeShip() {
+    pew.explodeTime = Math.ceil(SHIP_EXPODE_DUR * FPS);
+    if (!clickedRectangle)
+        return; // check if variable is null 
+    ctx.fillStyle = "lime";
+    ctx.strokeStyle = "lime";
+    const centerX = clickedRectangle.x + pew.w / 2;
+    const centerY = clickedRectangle.y + pew.h / 2;
+    // making a larger radius for the circle to be bigger than the square
+    const circleRadius = pew.r * 1.5; // increase the radius by 50%
+    // draw the circle at the center with the new radius
+    ctx.arc(centerX, centerY, circleRadius, 0, Math.PI * 2, false);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+}
 function newAsteroid(x, y) {
     let roid = {
         x: x,
@@ -72,6 +93,7 @@ function newAsteroid(x, y) {
     return roid;
 }
 function base() {
+    let exploding = pew.explodeTime > 0;
     //draw space 
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canv.width, canv.height); // draw a filled rectangle
@@ -79,7 +101,7 @@ function base() {
     ctx.strokeStyle = "white",
         ctx.lineWidth = PEW_SIZE / 20;
     // draw the clicked rectangle if it exists
-    if (!clicked) {
+    if (!clicked && !exploding) {
         // draw the pew (rectangle) at the center
         ctx.strokeStyle = "white";
         ctx.lineWidth = PEW_SIZE / 20;
@@ -94,7 +116,7 @@ function base() {
         ctx.lineTo(pew.x + pew.w / 2, pew.y + 3 * pew.h / 4); // Draw line to the bottom of the middle
         ctx.stroke();
     }
-    else if (clickedRectangle) {
+    else if (clickedRectangle && !exploding) {
         ctx.strokeStyle = "red";
         ctx.lineWidth = PEW_SIZE / 20;
         ctx.strokeRect(clickedRectangle.x, clickedRectangle.y, pew.w, pew.h); // Draw the red rectangle at the clicked position
@@ -118,12 +140,54 @@ function base() {
             ctx.arc(centerX, centerY, circleRadius, 0, Math.PI * 2, false);
             ctx.stroke();
         }
+        //check or asteroid collisions
+        for (let i = 0; i < roids.length; i++) {
+            if (distanceBtwPts(clickedRectangle.x, clickedRectangle.y, roids[i].x, roids[i].y) < pew.r + roids[i].r) {
+                explodeShip();
+            }
+        }
+    }
+    else {
+        if (!clickedRectangle)
+            return;
+        // calculate the center of the rectangle
+        const centerX = clickedRectangle.x + pew.w / 2;
+        const centerY = clickedRectangle.y + pew.h / 2;
+        // making a larger radius for the circle to be bigger than the square
+        // draw the circle at the center with the new radius
+        //draw explosion
+        ctx.fillStyle = "darkred";
+        ctx.beginPath();
+        // draw the circle at the center with the new radius
+        ctx.arc(centerX, centerY, pew.r * 1.7, 0, Math.PI * 2, false);
+        ctx.fill();
+        ctx.fillStyle = "red";
+        ctx.beginPath();
+        // draw the circle at the center with the new radius
+        ctx.arc(centerX, centerY, pew.r * 1.4, 0, Math.PI * 2, false);
+        ctx.fill();
+        ctx.fillStyle = "orange";
+        ctx.beginPath();
+        // draw the circle at the center with the new radius
+        ctx.arc(centerX, centerY, pew.r * 1.1, 0, Math.PI * 2, false);
+        ctx.fill();
+        ctx.fillStyle = "yellow";
+        ctx.beginPath();
+        // draw the circle at the center with the new radius
+        ctx.arc(centerX, centerY, pew.r * 0.8, 0, Math.PI * 2, false);
+        ctx.fill();
+        ctx.fillStyle = "white";
+        ctx.beginPath();
+        // draw the circle at the center with the new radius
+        ctx.arc(centerX, centerY, pew.r * 0.5, 0, Math.PI * 2, false);
+        ctx.fill();
+        shipExploded = true;
     }
     //draw asteroids 
-    ctx.strokeStyle = "slategrey";
-    ctx.lineWidth = PEW_SIZE / 20;
-    let x, y, r, a, vert, offs;
+    // let x, y, r, a, vert, offs; 
     for (let i = 0; i < roids.length; i++) {
+        ctx.strokeStyle = "slategrey";
+        ctx.lineWidth = PEW_SIZE / 20;
         //get the asteroid properties 
         const { x, y, r, a, vert, offs } = roids[i];
         // x = roids[i].x; 
@@ -148,6 +212,27 @@ function base() {
             ctx.stroke();
         }
         //move the asteroid 
+        roids[i].x += roids[i].xv;
+        roids[i].y += roids[i].yv;
+        //handle edge of screen 
+        //if go off screen, it will appear on the other side 
+        //x direction 
+        if (roids[i].x < 0 - roids[i].r) {
+            roids[i].x = canv.width + roids[i].r;
+        }
+        else if (roids[i].x > canv.width + roids[i].r) {
+            roids[i].x = 0 - roids[i].r;
+        }
+        //y direction 
+        if (roids[i].y < 0 - roids[i].r) {
+            roids[i].y = canv.height + roids[i].r;
+        }
+        else if (roids[i].y > canv.height + roids[i].r) {
+            roids[i].y = 0 - roids[i].r;
+        }
+    }
+    //move the asteroid 
+    for (let i = 0; i < roids.length; i++) {
         roids[i].x += roids[i].xv;
         roids[i].y += roids[i].yv;
         //handle edge of screen 
