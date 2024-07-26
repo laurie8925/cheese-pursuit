@@ -119,13 +119,22 @@ function distanceBtwPts(x1, y1, x2, y2) {
 //   console.log(pew.explodeTime)
 // }
 function newAsteroid(x, y, r) {
+    const centreX = canv.width / 2;
+    const centreY = canv.height / 2;
+    //calculate direction from asteroid to center 
+    const dx = centreX - x;
+    const dy = centreY - y;
+    //caculate length of direction vector 
+    const unitX = dx / (Math.sqrt(dx * dx + dy * +dy));
+    const unitY = dy / (Math.sqrt(dx * dx + dy * +dy));
+    const speed = (Math.random() * (ROIDS_SPD - MIN_ROID_SPD) + MIN_ROID_SPD) / FPS;
     let roid = {
         x: x,
         y: y,
         //x velocity
-        xv: (Math.random() * (ROIDS_SPD - MIN_ROID_SPD) + MIN_ROID_SPD) / FPS * (Math.random() < 0.5 ? 1 : -1), // math random if less than 0.5, go positive, otherwsie go negative
+        xv: unitX * speed * (Math.random() < 0.5 ? 1 : -1), // math random if less than 0.5, go positive, otherwsie go negative
         //y velocity 
-        yv: (Math.random() * (ROIDS_SPD - MIN_ROID_SPD) + MIN_ROID_SPD) / FPS * (Math.random() < 0.5 ? 1 : -1),
+        yv: unitY * speed * (Math.random() < 0.5 ? 1 : -1),
         r: r, //radius 
         a: Math.random() * Math.PI * 2, //angles in radians
         vert: Math.floor(Math.random() * (ROIDS_VERT + 1) + ROIDS_VERT / 2),
