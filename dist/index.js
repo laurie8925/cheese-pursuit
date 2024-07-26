@@ -5,10 +5,11 @@ const PEW_SIZE = 30; // pew frame size in pixels
 const ROIDS_NUM = 5; //starting number of asteroids 
 const ROIDS_JAG = 0.4; //jaggedness of the asteroid (0 = none, 1 = lots)
 const ROIDS_SIZE = 100; //starting size of asteroids in pixels
-const ROIDS_SPD = 70; //max starting speed of asteroids in pixels per second 
+const MIN_ROID_SPD = 60; //min starting speed of asteroid in pixels per second 
+const ROIDS_SPD = 100; //max starting speed of asteroids in pixels per second 
 const ROIDS_VERT = 10; //average number of verticles on each asteroid 
 const EXPLODE_DUR = 0.3; //duratioin of the ship's explosion 
-const SHOW_BOUNDING = true; //show or hide collision bounding 
+const SHOW_BOUNDING = false; //show or hide collision bounding 
 const SHOW_CENTRE_DOT = false; //show or hide ship's center dot 
 let pewCollision = false;
 const canv = document.getElementById("gameCanvas");
@@ -59,10 +60,37 @@ function destroyAsteroids(index) {
     asteroidDebris.push(asteroid);
     roids.splice(index, 1);
     //add new asteroid after one is destoryed
-    const x = Math.floor(Math.random() * canv.width);
-    const y = Math.floor(Math.random() * canv.height);
+    // const x = Math.floor( Math.random() * canv.width); 
+    // const y = Math.floor( Math.random() * canv.height); 
+    // roids.push(newAsteroid(x, y, Math.ceil(ROIDS_SIZE / 2)));
+    //spawn from one of the edges 
+    const side = Math.floor(Math.random() * 4); //this will randomly determine which side to spawn 
+    let x;
+    let y;
+    switch (side) {
+        case 0: //top
+            x = Math.floor(Math.random() * canv.width);
+            y = 0;
+            break;
+        case 1: //bottom
+            x = Math.floor(Math.random() * canv.width);
+            y = canv.height;
+            break;
+        case 2: //right
+            x = canv.width;
+            y = Math.floor(Math.random() * canv.height);
+            break;
+        case 3: //left
+            x = 0;
+            y = Math.floor(Math.random() * canv.height);
+            break;
+        default:
+            x = Math.floor(Math.random() * canv.width);
+            y = Math.floor(Math.random() * canv.height);
+            break;
+    }
     roids.push(newAsteroid(x, y, Math.ceil(ROIDS_SIZE / 2)));
-    if (asteroidDebris.length == 10) { //when hit 10 asteroid
+    if (asteroidDebris.length == 10) { //when hit 10 asteroids
         asteroidDebris = [];
         //increase level
         level++;
@@ -74,31 +102,30 @@ function distanceBtwPts(x1, y1, x2, y2) {
     //for buffer zone
     return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
 }
-function explodeShip() {
-    pew.explodeTime = Math.ceil(EXPLODE_DUR * FPS); //explosion time 
-    if (!clickedRectangle)
-        return; // check if variable is null 
-    ctx.strokeStyle = "lime";
-    ctx.lineWidth = PEW_SIZE / 20;
-    ctx.strokeRect(clickedRectangle.x, clickedRectangle.y, pew.w, pew.h); // Draw the red rectangle at the clicked position
-    ctx.beginPath();
-    //horzontal line
-    ctx.moveTo(clickedRectangle.x + pew.w / 4, clickedRectangle.y + pew.h / 2); // Start at one side of the middle
-    ctx.lineTo(clickedRectangle.x + 3 * pew.w / 4, clickedRectangle.y + pew.h / 2); // Draw line to the other side of the middle
-    //verticle line
-    ctx.moveTo(clickedRectangle.x + pew.w / 2, clickedRectangle.y + pew.h / 4); // Start at the top of the middle
-    ctx.lineTo(clickedRectangle.x + pew.w / 2, clickedRectangle.y + 3 * pew.h / 4); // Draw line to the bottom of the middle
-    ctx.stroke();
-    console.log(pew.explodeTime);
-}
+// function explodeShip(){
+//   pew.explodeTime = Math.ceil(EXPLODE_DUR * FPS); //explosion time 
+//   if (!clickedRectangle) return; // check if variable is null 
+//   ctx!.strokeStyle = "lime";
+//   ctx!.lineWidth = PEW_SIZE / 20;
+//   ctx!.strokeRect(clickedRectangle.x, clickedRectangle.y, pew.w, pew.h); // Draw the red rectangle at the clicked position
+//   ctx!.beginPath();
+//     //horzontal line
+//     ctx!.moveTo(clickedRectangle.x + pew.w / 4, clickedRectangle.y + pew.h / 2); // Start at one side of the middle
+//     ctx!.lineTo(clickedRectangle.x + 3 * pew.w / 4, clickedRectangle.y + pew.h / 2); // Draw line to the other side of the middle
+//     //verticle line
+//     ctx!.moveTo(clickedRectangle.x + pew.w / 2, clickedRectangle.y + pew.h / 4); // Start at the top of the middle
+//     ctx!.lineTo(clickedRectangle.x + pew.w / 2, clickedRectangle.y + 3 * pew.h / 4); // Draw line to the bottom of the middle
+//   ctx!.stroke(); 
+//   console.log(pew.explodeTime)
+// }
 function newAsteroid(x, y, r) {
     let roid = {
         x: x,
         y: y,
         //x velocity
-        xv: Math.random() * ROIDS_SPD / FPS * (Math.random() < 0.5 ? 1 : -1), // math random if less than 0.5, go positive, otherwsie go negative
+        xv: (Math.random() * (ROIDS_SPD - MIN_ROID_SPD) + MIN_ROID_SPD) / FPS * (Math.random() < 0.5 ? 1 : -1), // math random if less than 0.5, go positive, otherwsie go negative
         //y velocity 
-        yv: Math.random() * ROIDS_SPD / FPS * (Math.random() < 0.5 ? 1 : -1),
+        yv: (Math.random() * (ROIDS_SPD - MIN_ROID_SPD) + MIN_ROID_SPD) / FPS * (Math.random() < 0.5 ? 1 : -1),
         r: r, //radius 
         a: Math.random() * Math.PI * 2, //angles in radians
         vert: Math.floor(Math.random() * (ROIDS_VERT + 1) + ROIDS_VERT / 2),
