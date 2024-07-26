@@ -4,9 +4,9 @@ const FPS = 30; //30 frames per sec
 const PEW_SIZE = 30; // pew frame size in pixels
 const ROIDS_NUM = 5; //starting number of asteroids 
 const ROIDS_JAG = 0.4; //jaggedness of the asteroid (0 = none, 1 = lots)
-const ROIDS_SIZE = 100; //starting size of asteroids in pixels
-const MIN_ROID_SPD = 60; //min starting speed of asteroid in pixels per second 
-const ROIDS_SPD = 100; //max starting speed of asteroids in pixels per second 
+const ROIDS_SIZE = 80; //starting size of asteroids in pixels
+const MIN_ROID_SPD = 140; //min starting speed of asteroid in pixels per second 
+const ROIDS_SPD = 300; //max starting speed of asteroids in pixels per second 
 const ROIDS_VERT = 10; //average number of verticles on each asteroid 
 const EXPLODE_DUR = 0.3; //duratioin of the ship's explosion 
 const SHOW_BOUNDING = false; //show or hide collision bounding 
@@ -268,12 +268,6 @@ function base() {
         ctx.lineWidth = PEW_SIZE / 20;
         //get the asteroid properties 
         const { x, y, r, a, vert, offs } = roids[i];
-        // x = roids[i].x; 
-        // y = roids[i].y; 
-        // r = roids[i].r; 
-        // a = roids[i].a; 
-        // vert = roids[i].vert; 
-        // offs = roids[i].offs; 
         // draw a path 
         ctx.beginPath();
         ctx.moveTo(x + r * offs[0] * Math.cos(a), y + r * offs[0] * Math.sin(a));
