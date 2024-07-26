@@ -5,7 +5,7 @@ const PEW_SIZE = 30; // pew frame size in pixels
 const ROIDS_NUM = 5; //starting number of asteroids 
 const ROIDS_JAG = 0.4; //jaggedness of the asteroid (0 = none, 1 = lots)
 const ROIDS_SIZE = 100; //starting size of asteroids in pixels
-const ROIDS_SPD = 50; //max starting speed of asteroids in pixels per second 
+const ROIDS_SPD = 70; //max starting speed of asteroids in pixels per second 
 const ROIDS_VERT = 10; //average number of verticles on each asteroid 
 const EXPLODE_DUR = 0.3; //duratioin of the ship's explosion 
 const SHOW_BOUNDING = true; //show or hide collision bounding 
