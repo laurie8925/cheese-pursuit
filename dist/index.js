@@ -4,9 +4,9 @@ const FPS = 30; //30 frames per sec
 const PEW_SIZE = 30; // pew frame size in pixels
 const ROIDS_NUM = 5; //starting number of asteroids 
 const ROIDS_JAG = 0.4; //jaggedness of the asteroid (0 = none, 1 = lots)
-const ROIDS_SIZE = 80; //starting size of asteroids in pixels
-const MIN_ROID_SPD = 140; //min starting speed of asteroid in pixels per second 
-const ROIDS_SPD = 300; //max starting speed of asteroids in pixels per second 
+const ROIDS_SIZE = 100; //starting size of asteroids in pixels
+const MIN_ROID_SPD = 100; //min starting speed of asteroid in pixels per second 
+const ROIDS_SPD = 200; //max starting speed of asteroids in pixels per second 
 const ROIDS_VERT = 10; //average number of verticles on each asteroid 
 const EXPLODE_DUR = 0.3; //duratioin of the ship's explosion 
 const SHOW_BOUNDING = false; //show or hide collision bounding 
@@ -15,12 +15,10 @@ let pewCollision = false;
 const canv = document.getElementById("gameCanvas");
 const ctx = canv.getContext("2d");
 //set up game parameters 
-let level;
+let level, pew, roids;
 newGame();
-//pew object
-const pew = newPew();
 //set up asteriod object 
-let roids = [];
+// let roids: Asteroid[] = []; 
 createAsteroidBelt();
 let asteroidDebris = [];
 let clicked = false;
@@ -40,7 +38,7 @@ function handleCanvasClick(ev) {
 function createAsteroidBelt() {
     roids = [];
     let x, y;
-    for (let i = 0; i < ROIDS_NUM; i++) {
+    for (let i = 0; i < ROIDS_NUM + level; i++) {
         do {
             x = Math.floor(Math.random() * canv.width);
             y = Math.floor(Math.random() * canv.height);
@@ -88,7 +86,9 @@ function destroyAsteroids(index) {
         //increase level
         level++;
         console.log(level);
-        // newLevel(); 
+        if (level % 5 === 0) {
+            roids.push(newAsteroid(x, y, Math.ceil(ROIDS_SIZE / 2)));
+        }
     }
 }
 function distanceBtwPts(x1, y1, x2, y2) {
@@ -112,6 +112,7 @@ function distanceBtwPts(x1, y1, x2, y2) {
 //   console.log(pew.explodeTime)
 // }
 function newAsteroid(x, y, r) {
+    let lvlMul = 1 + 0.3 * level;
     const centreX = canv.width / 2;
     const centreY = canv.height / 2;
     //calculate direction from asteroid to center 
@@ -120,7 +121,7 @@ function newAsteroid(x, y, r) {
     //caculate length of direction vector 
     const unitX = dx / (Math.sqrt(dx * dx + dy * +dy));
     const unitY = dy / (Math.sqrt(dx * dx + dy * +dy));
-    const speed = (Math.random() * (ROIDS_SPD - MIN_ROID_SPD) + MIN_ROID_SPD) / FPS;
+    const speed = (Math.random() * lvlMul * (ROIDS_SPD - MIN_ROID_SPD) + MIN_ROID_SPD) / FPS;
     let roid = {
         x: x,
         y: y,
@@ -140,6 +141,12 @@ function newAsteroid(x, y, r) {
     return roid;
 }
 function newGame() {
+    level = 0;
+    pew = newPew();
+    newLevel();
+}
+function newLevel() {
+    createAsteroidBelt();
 }
 function newPew() {
     return {
