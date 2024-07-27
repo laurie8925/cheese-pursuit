@@ -14,18 +14,11 @@ const SHOW_CENTRE_DOT = false; //show or hide ship's center dot
 let pewCollision = false;
 const canv = document.getElementById("gameCanvas");
 const ctx = canv.getContext("2d");
-let level = 1;
+//set up game parameters 
+let level;
+newGame();
 //pew object
-const pew = {
-    //center the starting position
-    x: canv.width / 2 - PEW_SIZE / 2,
-    y: canv.height / 2 - PEW_SIZE / 2,
-    h: PEW_SIZE,
-    w: PEW_SIZE,
-    r: PEW_SIZE / 2, //radius
-    // a: 90 / 180 * Math.PI //convert to radian of 90 degrees 
-    explodeTime: 0,
-};
+const pew = newPew();
 //set up asteriod object 
 let roids = [];
 createAsteroidBelt();
@@ -145,6 +138,19 @@ function newAsteroid(x, y, r) {
         roid.offs.push(Math.random() * ROIDS_JAG * 2 + 1 - ROIDS_JAG);
     }
     return roid;
+}
+function newGame() {
+}
+function newPew() {
+    return {
+        x: canv.width / 2 - PEW_SIZE / 2,
+        y: canv.height / 2 - PEW_SIZE / 2,
+        h: PEW_SIZE,
+        w: PEW_SIZE,
+        r: PEW_SIZE / 2, //radius
+        // a: 90 / 180 * Math.PI //convert to radian of 90 degrees 
+        explodeTime: 0,
+    };
 }
 function base() {
     let exploding = pew.explodeTime > 0;
