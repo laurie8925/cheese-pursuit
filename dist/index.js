@@ -4,18 +4,20 @@ const FPS = 30; //30 frames per sec
 const PEW_SIZE = 30; // pew frame size in pixels
 const ROIDS_NUM = 5; //starting number of asteroids 
 const ROIDS_JAG = 0.4; //jaggedness of the asteroid (0 = none, 1 = lots)
-const ROIDS_SIZE = 100; //starting size of asteroids in pixels
+let ROIDS_SIZE = 100; //starting size of asteroids in pixels
 const MIN_ROID_SPD = 100; //min starting speed of asteroid in pixels per second 
 const ROIDS_SPD = 200; //max starting speed of asteroids in pixels per second 
 const ROIDS_VERT = 10; //average number of verticles on each asteroid 
 const EXPLODE_DUR = 0.3; //duratioin of the ship's explosion 
 const SHOW_BOUNDING = false; //show or hide collision bounding 
 const SHOW_CENTRE_DOT = false; //show or hide ship's center dot 
+const TEXT_FADE = 2.5; // text fade time in seconds
+const TEXT_SIZE = 40; //text font height in pixels 
 let pewCollision = false;
 const canv = document.getElementById("gameCanvas");
 const ctx = canv.getContext("2d");
 //set up game parameters 
-let level, pew, roids;
+let level, pew, roids, text, textAlpha;
 newGame();
 //set up asteriod object 
 // let roids: Asteroid[] = []; 
@@ -85,10 +87,17 @@ function destroyAsteroids(index) {
         asteroidDebris = [];
         //increase level
         level++;
+        text = "Level" + (level + 1);
+        textAlpha = 1;
         console.log(level);
         if (level % 5 === 0) {
+            ROIDS_SIZE = ROIDS_SIZE - 5;
             roids.push(newAsteroid(x, y, Math.ceil(ROIDS_SIZE / 2)));
         }
+    }
+    else if (level === 100) {
+        text = "You beat the game!!! Congradulation !!!!";
+        textAlpha = 1;
     }
 }
 function distanceBtwPts(x1, y1, x2, y2) {
@@ -141,12 +150,18 @@ function newAsteroid(x, y, r) {
     return roid;
 }
 function newGame() {
-    level = 0;
+    level = 99;
     pew = newPew();
     newLevel();
 }
 function newLevel() {
     createAsteroidBelt();
+}
+function endGame() {
+    if (level === 100) {
+        text = "You Beat the Game! Congradulation!!!!";
+        textAlpha = 1;
+    }
 }
 function newPew() {
     return {
@@ -274,6 +289,15 @@ function base() {
     //     ctx!.lineTo(clickedRectangle.x + pew.w / 2, clickedRectangle.y + 3 * pew.h / 4);
     //   ctx!.stroke();
     // } 
+    //text ---------------------------------------------
+    if (textAlpha >= 0) {
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillStyle = "rgba(255, 255, 255, " + textAlpha + ")";
+        ctx.font = "small-caps " + TEXT_SIZE + "px dejavu sans mono";
+        ctx.fillText(text, canv.width / 2, canv.height * 0.75);
+        textAlpha -= (1.0 / TEXT_FADE / FPS);
+    }
     //draw asteroids --------------------------------------
     // let x, y, r, a, vert, offs; 
     for (let i = 0; i < roids.length; i++) {
