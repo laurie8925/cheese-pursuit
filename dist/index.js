@@ -94,6 +94,9 @@ function destroyAsteroids(index) {
             ROIDS_SIZE = ROIDS_SIZE - 5;
             roids.push(newAsteroid(x, y, Math.ceil(ROIDS_SIZE / 2)));
         }
+        else if (level === 100) {
+            return;
+        }
     }
     else if (level === 100) {
         text = "You beat the game!!! Congradulation !!!!";
