@@ -9,7 +9,7 @@ const MIN_ROID_SPD = 100; //min starting speed of asteroid in pixels per second
 const ROIDS_SPD = 200; //max starting speed of asteroids in pixels per second 
 const ROIDS_VERT = 10; //average number of verticles on each asteroid 
 const EXPLODE_DUR = 0.3; //duratioin of the ship's explosion 
-const SHOW_BOUNDING = false; //show or hide collision bounding 
+const SHOW_BOUNDING = true; //show or hide collision bounding 
 const SHOW_CENTRE_DOT = false; //show or hide ship's center dot 
 const TEXT_FADE = 2.5; // text fade time in seconds
 const TEXT_SIZE = 40; //text font height in pixels 
@@ -19,6 +19,14 @@ const ctx = canv.getContext("2d");
 //set up game parameters 
 let level, pew, roids, text, textAlpha;
 newGame();
+//images 
+// const MOUSE_CONFIG = [
+//   {image:"medias/mouse.png"}, 
+// ]
+const mouse = new Image();
+mouse.src = "medias/mouse.png";
+const paw = new Image();
+paw.src = "medias/cat_paw.png";
 //set up asteriod object 
 // let roids: Asteroid[] = []; 
 createAsteroidBelt();
@@ -153,7 +161,7 @@ function newAsteroid(x, y, r) {
     return roid;
 }
 function newGame() {
-    level = 99;
+    level = 0;
     pew = newPew();
     newLevel();
 }
@@ -196,38 +204,40 @@ function base() {
     }
     // draw the clicked rectangle if it exists
     if (!clicked && !exploding) {
-        // draw the pew (rectangle) at the center
-        ctx.strokeStyle = "white"; //base target
-        ctx.lineWidth = PEW_SIZE / 20;
-        ctx.strokeRect(pew.x, pew.y, pew.w, pew.h);
-        //cross 
-        ctx.beginPath();
-        //horzontal line
-        ctx.moveTo(pew.x + pew.w / 4, pew.y + pew.h / 2); // Start at one side of the middle
-        ctx.lineTo(pew.x + 3 * pew.w / 4, pew.y + pew.h / 2); // Draw line to the other side of the middle
-        //verticle line
-        ctx.moveTo(pew.x + pew.w / 2, pew.y + pew.h / 4); // Start at the top of the middle
-        ctx.lineTo(pew.x + pew.w / 2, pew.y + 3 * pew.h / 4); // Draw line to the bottom of the middle
-        ctx.stroke();
+        // // draw the pew (rectangle) at the center
+        // ctx!.strokeStyle = "white"; //base target
+        // ctx!.lineWidth = PEW_SIZE / 20;
+        // ctx!.strokeRect(pew.x, pew.y, pew.w, pew.h); 
+        // //cross 
+        // ctx!.beginPath();
+        //   //horzontal line
+        //   ctx!.moveTo(pew.x + pew.w / 4, pew.y + pew.h / 2); // Start at one side of the middle
+        //   ctx!.lineTo(pew.x + 3 * pew.w / 4, pew.y + pew.h / 2); // Draw line to the other side of the middle
+        //   //verticle line
+        //   ctx!.moveTo(pew.x + pew.w / 2, pew.y + pew.h / 4); // Start at the top of the middle
+        //   ctx!.lineTo(pew.x + pew.w / 2, pew.y + 3 * pew.h / 4); // Draw line to the bottom of the middle
+        // ctx!.stroke(); 
+        ctx.drawImage(paw, pew.x, pew.y, pew.w, pew.h * 1.5);
     }
     else if (clickedRectangle) { //before first colision 
-        ctx.strokeStyle = pewCollision ? "lime" : "red";
-        ctx.lineWidth = PEW_SIZE / 20;
-        ctx.strokeRect(clickedRectangle.x, clickedRectangle.y, pew.w, pew.h); // Draw the red rectangle at the clicked position
-        ctx.beginPath();
-        //horzontal line
-        ctx.moveTo(clickedRectangle.x + pew.w / 4, clickedRectangle.y + pew.h / 2); // Start at one side of the middle
-        ctx.lineTo(clickedRectangle.x + 3 * pew.w / 4, clickedRectangle.y + pew.h / 2); // Draw line to the other side of the middle
-        //verticle line
-        ctx.moveTo(clickedRectangle.x + pew.w / 2, clickedRectangle.y + pew.h / 4); // Start at the top of the middle
-        ctx.lineTo(clickedRectangle.x + pew.w / 2, clickedRectangle.y + 3 * pew.h / 4); // Draw line to the bottom of the middle
-        ctx.stroke();
+        // ctx!.strokeStyle = pewCollision ? "lime" : "red";
+        // ctx!.lineWidth = PEW_SIZE / 20;
+        // ctx!.strokeRect(clickedRectangle.x, clickedRectangle.y, pew.w, pew.h); // Draw the red rectangle at the clicked position
+        // ctx!.beginPath();
+        //   //horzontal line
+        //   ctx!.moveTo(clickedRectangle.x + pew.w / 4, clickedRectangle.y + pew.h / 2); // Start at one side of the middle
+        //   ctx!.lineTo(clickedRectangle.x + 3 * pew.w / 4, clickedRectangle.y + pew.h / 2); // Draw line to the other side of the middle
+        //   //verticle line
+        //   ctx!.moveTo(clickedRectangle.x + pew.w / 2, clickedRectangle.y + pew.h / 4); // Start at the top of the middle
+        //   ctx!.lineTo(clickedRectangle.x + pew.w / 2, clickedRectangle.y + 3 * pew.h / 4); // Draw line to the bottom of the middle
+        // ctx!.stroke(); 
+        const centerX = clickedRectangle.x + pew.w / 2;
+        const centerY = clickedRectangle.y + pew.h / 2;
+        ctx.drawImage(paw, centerX - pew.w / 2, centerY - pew.h / 2, pew.w, pew.h * 1.5);
         if (SHOW_BOUNDING) {
             ctx.strokeStyle = "lime";
             ctx.beginPath();
             // calculate the center of the rectangle
-            const centerX = clickedRectangle.x + pew.w / 2;
-            const centerY = clickedRectangle.y + pew.h / 2;
             // making a larger radius for the circle to be bigger than the square
             const circleRadius = pew.r * 1.5; // increase the radius by 50%
             // draw the circle at the center with the new radius
@@ -308,15 +318,28 @@ function base() {
         ctx.lineWidth = PEW_SIZE / 20;
         //get the asteroid properties 
         const { x, y, r, a, vert, offs } = roids[i];
-        // draw a path 
-        ctx.beginPath();
-        ctx.moveTo(x + r * offs[0] * Math.cos(a), y + r * offs[0] * Math.sin(a));
-        //draw the polygon 
-        for (let j = 1; j < vert; j++) {
-            ctx.lineTo(x + r * offs[j] * Math.cos(a + j * Math.PI * 2 / vert), y + r * offs[j] * Math.sin(a + j * Math.PI * 2 / vert));
-        }
-        ctx.closePath();
-        ctx.stroke();
+        // // draw a path 
+        // ctx!.beginPath(); 
+        // ctx!.moveTo(
+        //   x + r * offs[0] * Math.cos(a), 
+        //   y + r * offs[0] * Math.sin(a), 
+        // );
+        // //draw the polygon 
+        // for (let j = 1; j < vert; j++){ 
+        //   ctx!.lineTo(
+        //     x + r * offs[j] * Math.cos(a + j * Math.PI * 2 / vert),
+        //     y + r * offs[j] * Math.sin(a + j * Math.PI * 2 / vert)
+        //   )
+        // }
+        // // ctx!.drawImage(img, 0, 0, ROIDS_SIZE, ROIDS_SIZE);
+        // ctx!.closePath(); 
+        // ctx!.stroke();
+        const mouseX = roids[i].x += roids[i].xv;
+        const mouseY = roids[i].y += roids[i].yv;
+        const angle = Math.atan2(mouseY, mouseX);
+        // ctx!.rotate(angle)
+        ctx.drawImage(mouse, x - r, y - r, r * 2, r * 2);
+        // ctx!.restore();
         if (SHOW_BOUNDING) {
             ctx.strokeStyle = "lime";
             ctx.beginPath();
