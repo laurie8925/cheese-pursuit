@@ -4,7 +4,7 @@ const FPS = 30; //30 frames per sec
 let PEW_SIZE = 30; // pew frame size in pixels
 const ROIDS_NUM = 4; //starting number of asteroids 
 const ROIDS_JAG = 0.4; //jaggedness of the asteroid (0 = none, 1 = lots)
-let ROIDS_SIZE = 100; //starting size of asteroids in pixels
+let ROIDS_SIZE = 70; //starting size of asteroids in pixels
 const MIN_ROID_SPD = 100; //min starting speed of asteroid in pixels per second 
 const ROIDS_SPD = 200; //max starting speed of asteroids in pixels per second 
 const ROIDS_VERT = 10; //average number of verticles on each asteroid 
@@ -19,10 +19,6 @@ const ctx = canv.getContext("2d");
 //set up game parameters 
 let level, pew, roids, text, textAlpha;
 newGame();
-//images 
-// const MOUSE_CONFIG = [
-//   {image:"medias/mouse.png"}, 
-// ]
 const mouse = new Image();
 mouse.src = "medias/mouse.png";
 const paw = new Image();
@@ -97,7 +93,7 @@ function destroyAsteroids(index) {
         if (level % 10 === 0) {
             ROIDS_SIZE = ROIDS_SIZE - 5;
             roids.push(newAsteroid(x, y, Math.ceil(ROIDS_SIZE / 2)));
-            PEW_SIZE -= 5;
+            PEW_SIZE -= 2.5;
         }
         else if (level === 100) {
             return;
@@ -111,22 +107,6 @@ function distanceBtwPts(x1, y1, x2, y2) {
     //for buffer zone
     return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
 }
-// function explodeShip(){
-//   pew.explodeTime = Math.ceil(EXPLODE_DUR * FPS); //explosion time 
-//   if (!clickedRectangle) return; // check if variable is null 
-//   ctx!.strokeStyle = "lime";
-//   ctx!.lineWidth = PEW_SIZE / 20;
-//   ctx!.strokeRect(clickedRectangle.x, clickedRectangle.y, pew.w, pew.h); // Draw the red rectangle at the clicked position
-//   ctx!.beginPath();
-//     //horzontal line
-//     ctx!.moveTo(clickedRectangle.x + pew.w / 4, clickedRectangle.y + pew.h / 2); // Start at one side of the middle
-//     ctx!.lineTo(clickedRectangle.x + 3 * pew.w / 4, clickedRectangle.y + pew.h / 2); // Draw line to the other side of the middle
-//     //verticle line
-//     ctx!.moveTo(clickedRectangle.x + pew.w / 2, clickedRectangle.y + pew.h / 4); // Start at the top of the middle
-//     ctx!.lineTo(clickedRectangle.x + pew.w / 2, clickedRectangle.y + 3 * pew.h / 4); // Draw line to the bottom of the middle
-//   ctx!.stroke(); 
-//   console.log(pew.explodeTime)
-// }
 function newAsteroid(x, y, r) {
     let lvlMul = 1 + 0.3 * level;
     const centreX = canv.width / 2;
@@ -158,7 +138,7 @@ function newAsteroid(x, y, r) {
     return roid;
 }
 function newGame() {
-    level = 20;
+    level = 0;
     pew = newPew();
     newLevel();
 }
@@ -254,49 +234,6 @@ function base() {
             }
         }
     }
-    // else if(exploding){ //after collision 
-    //   if (!clickedRectangle) return;
-    //   // calculate the center of the rectangle
-    //   const centerX = clickedRectangle.x + pew.w / 2;
-    //   const centerY = clickedRectangle.y + pew.h / 2;
-    //   // making a larger radius for the circle to be bigger than the square
-    //   // draw the circle at the center with the new radius
-    //   // //draw explosion
-    //   // ctx!.fillStyle = "darkred"; 
-    //   // ctx!.beginPath();
-    //   // // draw the circle at the center with the new radius
-    //   // ctx!.arc(centerX, centerY, pew.r * 1.7, 0, Math.PI * 2, false); 
-    //   // ctx!.fill(); 
-    //   // ctx!.fillStyle = "red"; 
-    //   // ctx!.beginPath();
-    //   // // draw the circle at the center with the new radius
-    //   // ctx!.arc(centerX, centerY, pew.r * 1.4, 0, Math.PI * 2, false); 
-    //   // ctx!.fill(); 
-    //   // ctx!.fillStyle = "orange"; 
-    //   // ctx!.beginPath();
-    //   // // draw the circle at the center with the new radius
-    //   // ctx!.arc(centerX, centerY, pew.r * 1.1, 0, Math.PI * 2, false); 
-    //   // ctx!.fill(); 
-    //   // ctx!.fillStyle = "yellow"; 
-    //   // ctx!.beginPath();
-    //   // // draw the circle at the center with the new radius
-    //   // ctx!.arc(centerX, centerY, pew.r * 0.8, 0, Math.PI * 2, false); 
-    //   // ctx!.fill(); 
-    //   // ctx!.fillStyle = "white"; 
-    //   // ctx!.beginPath();
-    //   // // draw the circle at the center with the new radius
-    //   // ctx!.arc(centerX, centerY, pew.r * 0.5, 0, Math.PI * 2, false); 
-    //   // ctx!.fill();
-    //   ctx!.strokeStyle = pewCollision ? "lime" : "red"; //color changes depends if its collision 
-    //   ctx!.lineWidth = PEW_SIZE / 20;
-    //   ctx!.strokeRect(clickedRectangle.x, clickedRectangle.y, pew.w, pew.h);
-    //   ctx!.beginPath();
-    //     ctx!.moveTo(clickedRectangle.x + pew.w / 4, clickedRectangle.y + pew.h / 2);
-    //     ctx!.lineTo(clickedRectangle.x + 3 * pew.w / 4, clickedRectangle.y + pew.h / 2);
-    //     ctx!.moveTo(clickedRectangle.x + pew.w / 2, clickedRectangle.y + pew.h / 4);
-    //     ctx!.lineTo(clickedRectangle.x + pew.w / 2, clickedRectangle.y + 3 * pew.h / 4);
-    //   ctx!.stroke();
-    // } 
     //text ---------------------------------------------
     if (textAlpha >= 0) {
         ctx.textAlign = "center";
@@ -335,19 +272,11 @@ function base() {
         // console.log("xv " + roids[i].xv)
         roids[i].x += roids[i].xv;
         roids[i].y += roids[i].yv;
-        const rotate = Math.atan2(roids[i].yv, roids[i].xv) + 1.5;
-        // console.log("angle in radian " + rotate)
+        const rotate = Math.atan2(roids[i].yv, roids[i].xv) + 1.5; //find angle + 1.5 to adjust angle facing
         ctx.save();
-        // ctx!.translate(mouseX + ROIDS_SIZE/2, mouseY+ ROIDS_SIZE/2); 
-        // ctx!.rotate(rotate); 
-        // ctx!.rotate((45 * Math.PI) / 180);
-        ctx.translate(roids[i].x, roids[i].y);
-        ctx.rotate(rotate);
+        ctx.translate(roids[i].x, roids[i].y); //translate on roid's x and y position 
+        ctx.rotate(rotate); //rotate to roid rotation
         ctx.drawImage(mouse, -r, -r, r * 2, r * 2);
-        // ctx!.rotate(-(roids[i].rotation));
-        // ctx!.rotate((-45 * Math.PI) / 180);
-        // ctx!.translate(-mouseX, -mouseY); 
-        // ctx!.translate(-mouseX, -mouseY); 
         ctx.restore();
         if (SHOW_BOUNDING) {
             ctx.strokeStyle = "lime";
@@ -356,20 +285,10 @@ function base() {
             ctx.stroke();
         }
     }
-    // collision case 
-    // for(let i = roids.length - 1; i >=0; i--){ 
-    //   const {x:ax, y:ay, r:ar} = roids[i]; 
-    //   if(!clickedRectangle) return; 
-    //   if (pew.explodeTime == 0 && distanceBtwPts(ax, ay, clickedRectangle.x, clickedRectangle.y) < ar) { 
-    //     destroyAsteroids(i); 
-    //     pew.explodeTime = Math.ceil(EXPLODE_DUR * FPS);
-    //     break; 
-    //   }
-    // }
     //move the asteroid 
     for (let i = 0; i < roids.length; i++) {
         // roids[i].x += roids[i].xv; 
-        // roids[i].y += roids[i].yv; 
+        // roids[i].y += roids[i].yv;
         //handle edge of screen 
         //if go off screen, it will appear on the other side 
         //x direction 
