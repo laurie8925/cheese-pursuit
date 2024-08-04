@@ -60,10 +60,6 @@ function destroyAsteroids(index) {
     const asteroid = roids[index];
     asteroidDebris.push(asteroid);
     roids.splice(index, 1);
-    //add new asteroid after one is destoryed
-    // const x = Math.floor( Math.random() * canv.width); 
-    // const y = Math.floor( Math.random() * canv.height); 
-    // roids.push(newAsteroid(x, y, Math.ceil(ROIDS_SIZE / 2)));
     //spawn from one of the edges 
     const side = Math.floor(Math.random() * 4); //this will randomly determine which side to spawn 
     let x;
@@ -98,11 +94,9 @@ function destroyAsteroids(index) {
         text = "Level" + level;
         textAlpha = 1;
         console.log(level);
-        if (level % 5 === 0) {
+        if (level % 10 === 0) {
             ROIDS_SIZE = ROIDS_SIZE - 5;
             roids.push(newAsteroid(x, y, Math.ceil(ROIDS_SIZE / 2)));
-        }
-        else if (level % 10 === 0) {
             PEW_SIZE -= 5;
         }
         else if (level === 100) {
@@ -110,7 +104,7 @@ function destroyAsteroids(index) {
         }
     }
     else if (level === 100) {
-        endGame();
+        winGame();
     }
 }
 function distanceBtwPts(x1, y1, x2, y2) {
@@ -171,7 +165,7 @@ function newGame() {
 function newLevel() {
     createAsteroidBelt();
 }
-function endGame() {
+function winGame() {
     text = "You Beat the Game! Congradulation!!!!";
     textAlpha = 1;
 }
