@@ -41,6 +41,24 @@ function handleCanvasClick(ev) {
     // Update the rectangle position if another click is made
     clickedRectangle = { x: rectX - pew.w / 2, y: rectY - pew.h / 2, r: pew.r };
 }
+let counter;
+class Timer {
+    constructor(intital) {
+        this.intital = intital;
+        this.counter = intital;
+        let intervalid = setInterval(() => {
+            this.counter--;
+            console.log(`Countdown: ${this.counter}`);
+            if (this.counter === 0)
+                clearInterval(intervalid);
+        }, 1000);
+    }
+    get timer() {
+        return this.counter;
+    }
+}
+const timer = new Timer(10);
+const currentTime = timer.timer;
 function createAsteroidBelt() {
     roids = [];
     let x, y;
@@ -58,8 +76,7 @@ function destroyAsteroids(index) {
     roids.splice(index, 1);
     //spawn from one of the edges 
     const side = Math.floor(Math.random() * 4); //this will randomly determine which side to spawn 
-    let x;
-    let y;
+    let x, y;
     switch (side) {
         case 0: //top
             x = Math.floor(Math.random() * canv.width);
@@ -83,6 +100,9 @@ function destroyAsteroids(index) {
             break;
     }
     roids.push(newAsteroid(x, y, Math.ceil(ROIDS_SIZE / 2)));
+    if (timer.timer === 0) {
+        console.log("game over");
+    }
     if (asteroidDebris.length == 10) { //when hit 10 asteroids
         asteroidDebris = [];
         //increase level
@@ -90,6 +110,7 @@ function destroyAsteroids(index) {
         text = "Level " + level;
         textAlpha = 1;
         console.log(level);
+        //increase difficulty when hit every 10 level
         if (level % 10 === 0) {
             ROIDS_SIZE = ROIDS_SIZE - 5;
             roids.push(newAsteroid(x, y, Math.ceil(ROIDS_SIZE / 2)));
@@ -143,7 +164,6 @@ function newGame() {
     newLevel();
 }
 function newLevel() {
-    createAsteroidBelt();
 }
 function winGame() {
     text = "You Beat the Game! Congradulation!!!!";
