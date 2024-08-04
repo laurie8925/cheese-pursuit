@@ -1,4 +1,11 @@
 "use strict";
+/*TODO: 8/04
+- add pause, resume, start, and reset method in timer classs
+- reset timer when new level hits
+ */
+/*FIXME:
+- determine correct score variable type to get rid of the red underline
+*/
 // constants 
 const FPS = 30; //30 frames per sec
 let PEW_SIZE = 30; // pew frame size in pixels
