@@ -17,7 +17,7 @@ let pewCollision = false;
 const canv = document.getElementById("gameCanvas");
 const ctx = canv.getContext("2d");
 //set up game parameters 
-let level, pew, roids, text, textAlpha;
+let level, pew, roids, score, text, textAlpha;
 newGame();
 const mouse = new Image();
 mouse.src = "medias/mouse.png";
@@ -46,9 +46,9 @@ function handleCanvasClick(ev) {
 }
 let counter;
 class Timer {
-    constructor(intital) {
-        this.intital = intital;
-        this.counter = intital;
+    constructor(initial) {
+        this.initial = initial;
+        this.counter = initial;
         let intervalid = setInterval(() => {
             this.counter--;
             console.log(`Countdown: ${this.counter}`);
@@ -61,7 +61,16 @@ class Timer {
     }
 }
 const timer = new Timer(10);
-console.log(timer.timer);
+//check timer and destoryed mouse number for game over
+function checkTimer() {
+    if (timer.timer === 0 && asteroidDebris.length < 10) {
+        gameOver();
+    }
+    else {
+        console.log("still got " + timer.timer + " seconds");
+    }
+}
+setInterval(checkTimer, 1000); //check counter very second
 function createAsteroidBelt() {
     roids = [];
     let x, y;
@@ -74,20 +83,12 @@ function createAsteroidBelt() {
     }
 }
 //check timer and destoryed mouse number for game over
-function checkTimer() {
-    if (timer.timer === 0 && asteroidDebris.length < 10) {
-        gameOver();
-    }
-    else {
-        console.log("still got " + timer.timer + " seconds");
-    }
-}
-setInterval(checkTimer, 1000); //check counter very second
-//check timer and destoryed mouse number for game over
 function destroyAsteroids(index) {
     const asteroid = roids[index];
     asteroidDebris.push(asteroid);
     roids.splice(index, 1);
+    //add one to score for destorying 
+    score = asteroidDebris.length;
     //spawn from one of the edges 
     const side = Math.floor(Math.random() * 4); //this will randomly determine which side to spawn 
     let x, y;
@@ -121,6 +122,7 @@ function destroyAsteroids(index) {
         text = "Level " + level;
         textAlpha = 1;
         console.log(level);
+        timer;
         //increase difficulty when hit every 10 level
         if (level % 10 === 0) {
             ROIDS_SIZE = ROIDS_SIZE - 5;
@@ -172,9 +174,15 @@ function newAsteroid(x, y, r) {
 function newGame() {
     level = 1;
     pew = newPew();
+    score = 0;
     newLevel();
 }
 function newLevel() {
+    // level++; 
+    // text = "Level " + level; 
+    // textAlpha = 1; 
+    // console.log(level);
+    // new Timer(10); 
 }
 function winGame() {
     text = "You Beat the Game! Congradulation!!!!";
@@ -285,6 +293,16 @@ function base() {
         ctx.fillText(text, canv.width / 2, canv.height * 0.75);
         textAlpha -= (1.0 / TEXT_FADE / FPS);
     }
+    else if (pew.dead) {
+        //start new game after game over
+        newGame();
+    }
+    //draw the score
+    ctx.textAlign = "right";
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = "white";
+    ctx.font = TEXT_SIZE + "px dejavu sans mono";
+    ctx.fillText(score, canv.width - PEW_SIZE / 2, PEW_SIZE);
     //draw asteroids --------------------------------------
     // let x, y, r, a, vert, offs; 
     for (let i = 0; i < roids.length; i++) {
