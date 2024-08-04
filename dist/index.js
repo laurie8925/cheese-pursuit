@@ -67,7 +67,7 @@ class Timer {
         return this.counter;
     }
 }
-const timer = new Timer(10);
+let timer = new Timer(10);
 //check timer and destoryed mouse number for game over
 function checkTimer() {
     if (timer.timer === 0 && asteroidDebris.length < 10) {
@@ -125,11 +125,7 @@ function destroyAsteroids(index) {
     if (asteroidDebris.length == 10) { //when hit 10 asteroids
         asteroidDebris = [];
         //increase level
-        level++;
-        text = "Level " + level;
-        textAlpha = 1;
-        console.log(level);
-        timer;
+        newLevel();
         //increase difficulty when hit every 10 level
         if (level % 10 === 0) {
             ROIDS_SIZE = ROIDS_SIZE - 5;
@@ -182,14 +178,13 @@ function newGame() {
     level = 1;
     pew = newPew();
     score = 0;
-    newLevel();
 }
 function newLevel() {
-    // level++; 
-    // text = "Level " + level; 
-    // textAlpha = 1; 
-    // console.log(level);
-    // new Timer(10); 
+    level++;
+    text = "Level " + level;
+    textAlpha = 1;
+    console.log(level);
+    timer = new Timer(10);
 }
 function winGame() {
     text = "You Beat the Game! Congradulation!!!!";
@@ -223,7 +218,6 @@ function base() {
         ctx.lineWidth = PEW_SIZE / 20;
     // determine if the pew is colliding with any asteroids
     if (clickedRectangle && !pew.dead) {
-        console.log(pew.dead);
         pewCollision = false;
         for (let i = 0; i < roids.length; i++) {
             if (distanceBtwPts(clickedRectangle.x, clickedRectangle.y, roids[i].x, roids[i].y) < clickedRectangle.r + roids[i].r) { //check if it's in collision with asteroids 
@@ -232,34 +226,10 @@ function base() {
         }
     }
     // draw the clicked rectangle if it exists
-    if (!clicked && !pew.dead) {
-        // // draw the pew (rectangle) at the center
-        // ctx!.strokeStyle = "white"; //base target
-        // ctx!.lineWidth = PEW_SIZE / 20;
-        // ctx!.strokeRect(pew.x, pew.y, pew.w, pew.h); 
-        // //cross 
-        // ctx!.beginPath();
-        //   //horzontal line
-        //   ctx!.moveTo(pew.x + pew.w / 4, pew.y + pew.h / 2); // Start at one side of the middle
-        //   ctx!.lineTo(pew.x + 3 * pew.w / 4, pew.y + pew.h / 2); // Draw line to the other side of the middle
-        //   //verticle line
-        //   ctx!.moveTo(pew.x + pew.w / 2, pew.y + pew.h / 4); // Start at the top of the middle
-        //   ctx!.lineTo(pew.x + pew.w / 2, pew.y + 3 * pew.h / 4); // Draw line to the bottom of the middle
-        // ctx!.stroke(); 
+    if (!clicked) {
         ctx.drawImage(paw, pew.x, pew.y, pew.w, pew.h * 1.5);
     }
-    else if (clickedRectangle) { //before first colision 
-        // ctx!.strokeStyle = pewCollision ? "lime" : "red";
-        // ctx!.lineWidth = PEW_SIZE / 20;
-        // ctx!.strokeRect(clickedRectangle.x, clickedRectangle.y, pew.w, pew.h); // Draw the red rectangle at the clicked position
-        // ctx!.beginPath();
-        //   //horzontal line
-        //   ctx!.moveTo(clickedRectangle.x + pew.w / 4, clickedRectangle.y + pew.h / 2); // Start at one side of the middle
-        //   ctx!.lineTo(clickedRectangle.x + 3 * pew.w / 4, clickedRectangle.y + pew.h / 2); // Draw line to the other side of the middle
-        //   //verticle line
-        //   ctx!.moveTo(clickedRectangle.x + pew.w / 2, clickedRectangle.y + pew.h / 4); // Start at the top of the middle
-        //   ctx!.lineTo(clickedRectangle.x + pew.w / 2, clickedRectangle.y + 3 * pew.h / 4); // Draw line to the bottom of the middle
-        // ctx!.stroke(); 
+    else if (clickedRectangle && !pew.dead) { //before first colision 
         const centerX = clickedRectangle.x + pew.w / 2;
         const centerY = clickedRectangle.y + pew.h / 2;
         ctx.drawImage(paw, centerX - pew.w / 2, centerY - pew.h / 2, pew.w, pew.h * 1.5);
@@ -278,10 +248,9 @@ function base() {
             for (let i = 0; i < roids.length; i++) {
                 const { x: ax, y: ay, r: ar } = roids[i];
                 const { x: rx, y: ry, r: rr } = clickedRectangle;
-                // if (clickedRectangle && distanceBtwPts(clickedRectangle.x + pew.r, clickedRectangle.y + pew.r, roids[i].x, roids[i].y) < clickedRectangle.r + roids[i].r) {
                 if (clickedRectangle && distanceBtwPts(rx, ry, ax, ay) < rr + ar) {
+                    //check distance
                     destroyAsteroids(i);
-                    // pew.explodeTime = Math.ceil(EXPLODE_DUR * FPS);
                     pewCollision = false;
                     break; // exit the loop as we have destroyed one asteroid
                 }
@@ -289,7 +258,7 @@ function base() {
         }
     }
     else { //pew.dead = true
-        return;
+        gameOver();
     }
     //text ---------------------------------------------
     if (textAlpha >= 0) {
@@ -309,7 +278,14 @@ function base() {
     ctx.textBaseline = "middle";
     ctx.fillStyle = "white";
     ctx.font = TEXT_SIZE + "px dejavu sans mono";
-    ctx.fillText(score, canv.width - PEW_SIZE / 2, PEW_SIZE);
+    const scoreTxt = "Score: " + score;
+    ctx.fillText(scoreTxt, canv.width - PEW_SIZE / 2, PEW_SIZE);
+    //draw timer
+    ctx.textAlign = "left";
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = "white";
+    ctx.font = TEXT_SIZE + "px dejavu sans mono";
+    ctx.fillText(timer.timer, PEW_SIZE / 2, PEW_SIZE);
     //draw asteroids --------------------------------------
     // let x, y, r, a, vert, offs; 
     for (let i = 0; i < roids.length; i++) {
