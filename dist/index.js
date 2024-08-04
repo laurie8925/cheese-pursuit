@@ -32,6 +32,9 @@ let clickedRectangle = null; //position of clicked rec (if x and y number else n
 setInterval(base, 1000 / FPS);
 canv.addEventListener("click", handleCanvasClick);
 function handleCanvasClick(ev) {
+    if (pew.dead) {
+        return;
+    }
     // if (shipExploded) return; 
     ev.preventDefault();
     // calculate the position on the canvas
@@ -58,7 +61,7 @@ class Timer {
     }
 }
 const timer = new Timer(10);
-const currentTime = timer.timer;
+console.log(timer.timer);
 function createAsteroidBelt() {
     roids = [];
     let x, y;
@@ -70,6 +73,17 @@ function createAsteroidBelt() {
         roids.push(newAsteroid(x, y, Math.ceil(ROIDS_SIZE / 2)));
     }
 }
+//check timer and destoryed mouse number for game over
+function checkTimer() {
+    if (timer.timer === 0 && asteroidDebris.length < 10) {
+        gameOver();
+    }
+    else {
+        console.log("still got " + timer.timer + " seconds");
+    }
+}
+setInterval(checkTimer, 1000); //check counter very second
+//check timer and destoryed mouse number for game over
 function destroyAsteroids(index) {
     const asteroid = roids[index];
     asteroidDebris.push(asteroid);
@@ -100,9 +114,6 @@ function destroyAsteroids(index) {
             break;
     }
     roids.push(newAsteroid(x, y, Math.ceil(ROIDS_SIZE / 2)));
-    if (timer.timer === 0) {
-        console.log("game over");
-    }
     if (asteroidDebris.length == 10) { //when hit 10 asteroids
         asteroidDebris = [];
         //increase level
@@ -169,6 +180,12 @@ function winGame() {
     text = "You Beat the Game! Congradulation!!!!";
     textAlpha = 1;
 }
+function gameOver() {
+    text = "Game Over :(";
+    textAlpha = 1;
+    pew.dead = true;
+    // ctx!.clearRect(0, 0, canv.width, canv.height);
+}
 function newPew() {
     return {
         x: canv.width / 2 - PEW_SIZE / 2,
@@ -178,10 +195,11 @@ function newPew() {
         r: PEW_SIZE / 2, //radius
         // a: 90 / 180 * Math.PI //convert to radian of 90 degrees 
         explodeTime: 0,
+        dead: false,
     };
 }
 function base() {
-    let exploding = pew.explodeTime > 0;
+    // let exploding = pew.explodeTime > 0 
     //draw space 
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canv.width, canv.height); // draw a filled rectangle
@@ -189,7 +207,8 @@ function base() {
     ctx.strokeStyle = "white",
         ctx.lineWidth = PEW_SIZE / 20;
     // determine if the pew is colliding with any asteroids
-    if (clickedRectangle) {
+    if (clickedRectangle && !pew.dead) {
+        console.log(pew.dead);
         pewCollision = false;
         for (let i = 0; i < roids.length; i++) {
             if (distanceBtwPts(clickedRectangle.x, clickedRectangle.y, roids[i].x, roids[i].y) < clickedRectangle.r + roids[i].r) { //check if it's in collision with asteroids 
@@ -198,7 +217,7 @@ function base() {
         }
     }
     // draw the clicked rectangle if it exists
-    if (!clicked && !exploding) {
+    if (!clicked && !pew.dead) {
         // // draw the pew (rectangle) at the center
         // ctx!.strokeStyle = "white"; //base target
         // ctx!.lineWidth = PEW_SIZE / 20;
@@ -240,7 +259,7 @@ function base() {
             ctx.stroke();
         }
         //check or asteroid collisions
-        if (!exploding) {
+        if (!pew.dead) {
             for (let i = 0; i < roids.length; i++) {
                 const { x: ax, y: ay, r: ar } = roids[i];
                 const { x: rx, y: ry, r: rr } = clickedRectangle;
@@ -253,6 +272,9 @@ function base() {
                 }
             }
         }
+    }
+    else { //pew.dead = true
+        return;
     }
     //text ---------------------------------------------
     if (textAlpha >= 0) {
