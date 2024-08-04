@@ -1,8 +1,8 @@
 "use strict";
 // constants 
 const FPS = 30; //30 frames per sec
-const PEW_SIZE = 30; // pew frame size in pixels
-const ROIDS_NUM = 5; //starting number of asteroids 
+let PEW_SIZE = 30; // pew frame size in pixels
+const ROIDS_NUM = 4; //starting number of asteroids 
 const ROIDS_JAG = 0.4; //jaggedness of the asteroid (0 = none, 1 = lots)
 let ROIDS_SIZE = 100; //starting size of asteroids in pixels
 const MIN_ROID_SPD = 100; //min starting speed of asteroid in pixels per second 
@@ -48,7 +48,7 @@ function handleCanvasClick(ev) {
 function createAsteroidBelt() {
     roids = [];
     let x, y;
-    for (let i = 0; i < ROIDS_NUM + level; i++) {
+    for (let i = 0; i < ROIDS_NUM; i++) {
         do {
             x = Math.floor(Math.random() * canv.width);
             y = Math.floor(Math.random() * canv.height);
@@ -95,20 +95,22 @@ function destroyAsteroids(index) {
         asteroidDebris = [];
         //increase level
         level++;
-        text = "Level" + (level + 1);
+        text = "Level" + level;
         textAlpha = 1;
         console.log(level);
         if (level % 5 === 0) {
             ROIDS_SIZE = ROIDS_SIZE - 5;
             roids.push(newAsteroid(x, y, Math.ceil(ROIDS_SIZE / 2)));
         }
+        else if (level % 10 === 0) {
+            PEW_SIZE -= 5;
+        }
         else if (level === 100) {
             return;
         }
     }
     else if (level === 100) {
-        text = "You beat the game!!! Congradulation !!!!";
-        textAlpha = 1;
+        endGame();
     }
 }
 function distanceBtwPts(x1, y1, x2, y2) {
@@ -152,7 +154,8 @@ function newAsteroid(x, y, r) {
         r: r, //radius 
         a: Math.random() * Math.PI * 2, //angles in radians
         vert: Math.floor(Math.random() * (ROIDS_VERT + 1) + ROIDS_VERT / 2),
-        offs: []
+        offs: [],
+        rotation: 0,
     };
     //create the vertex offset array 
     for (var i = 0; i < roid.vert; i++) {
@@ -161,7 +164,7 @@ function newAsteroid(x, y, r) {
     return roid;
 }
 function newGame() {
-    level = 0;
+    level = 20;
     pew = newPew();
     newLevel();
 }
@@ -169,10 +172,8 @@ function newLevel() {
     createAsteroidBelt();
 }
 function endGame() {
-    if (level === 100) {
-        text = "You Beat the Game! Congradulation!!!!";
-        textAlpha = 1;
-    }
+    text = "You Beat the Game! Congradulation!!!!";
+    textAlpha = 1;
 }
 function newPew() {
     return {
@@ -334,12 +335,26 @@ function base() {
         // // ctx!.drawImage(img, 0, 0, ROIDS_SIZE, ROIDS_SIZE);
         // ctx!.closePath(); 
         // ctx!.stroke();
-        const mouseX = roids[i].x += roids[i].xv;
-        const mouseY = roids[i].y += roids[i].yv;
-        const angle = Math.atan2(mouseY, mouseX);
-        // ctx!.rotate(angle)
-        ctx.drawImage(mouse, x - r, y - r, r * 2, r * 2);
-        // ctx!.restore();
+        // const mouseX = roids[i].xv;
+        // const mouseY = roids[i].yv; 
+        // console.log("yv " + roids[i].yv)
+        // console.log("xv " + roids[i].xv)
+        roids[i].x += roids[i].xv;
+        roids[i].y += roids[i].yv;
+        const rotate = Math.atan2(roids[i].yv, roids[i].xv) + 1.5;
+        // console.log("angle in radian " + rotate)
+        ctx.save();
+        // ctx!.translate(mouseX + ROIDS_SIZE/2, mouseY+ ROIDS_SIZE/2); 
+        // ctx!.rotate(rotate); 
+        // ctx!.rotate((45 * Math.PI) / 180);
+        ctx.translate(roids[i].x, roids[i].y);
+        ctx.rotate(rotate);
+        ctx.drawImage(mouse, -r, -r, r * 2, r * 2);
+        // ctx!.rotate(-(roids[i].rotation));
+        // ctx!.rotate((-45 * Math.PI) / 180);
+        // ctx!.translate(-mouseX, -mouseY); 
+        // ctx!.translate(-mouseX, -mouseY); 
+        ctx.restore();
         if (SHOW_BOUNDING) {
             ctx.strokeStyle = "lime";
             ctx.beginPath();
@@ -359,8 +374,8 @@ function base() {
     // }
     //move the asteroid 
     for (let i = 0; i < roids.length; i++) {
-        roids[i].x += roids[i].xv;
-        roids[i].y += roids[i].yv;
+        // roids[i].x += roids[i].xv; 
+        // roids[i].y += roids[i].yv; 
         //handle edge of screen 
         //if go off screen, it will appear on the other side 
         //x direction 
