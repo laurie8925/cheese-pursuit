@@ -87,7 +87,7 @@ function destroyAsteroids(index) {
         asteroidDebris = [];
         //increase level
         level++;
-        text = "Level" + level;
+        text = "Level " + level;
         textAlpha = 1;
         console.log(level);
         if (level % 10 === 0) {
@@ -138,7 +138,7 @@ function newAsteroid(x, y, r) {
     return roid;
 }
 function newGame() {
-    level = 0;
+    level = 1;
     pew = newPew();
     newLevel();
 }
@@ -272,7 +272,7 @@ function base() {
         // console.log("xv " + roids[i].xv)
         roids[i].x += roids[i].xv;
         roids[i].y += roids[i].yv;
-        const rotate = Math.atan2(roids[i].yv, roids[i].xv) + 1.5; //find angle + 1.5 to adjust angle facing
+        const rotate = Math.atan2(roids[i].yv, roids[i].xv) + (90 * Math.PI / 180); //find angle + 1.5 to adjust angle facing
         ctx.save();
         ctx.translate(roids[i].x, roids[i].y); //translate on roid's x and y position 
         ctx.rotate(rotate); //rotate to roid rotation
