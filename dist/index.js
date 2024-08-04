@@ -1,10 +1,17 @@
 "use strict";
-/*TODO: 8/04
-- add pause, resume, start, and reset method in timer classs
-- reset timer when new level hits
+/*TODO:
+- screens: start, insctrution, menu, losing, winning, exiting
+- button: start, instruction, mute/unmute, to homescreen, restart/ replay, resume, exit
+
+what to include in each screen
+start: start, instruction, mute/unmute
+instruction: back to homepage
+menu: mute/unmute, resume, restart, exit to losing screen
+losing: replay, back to homepage + level and score
+winning: replay, back to homepage
  */
 /*FIXME:
-- determine correct score variable type to get rid of the red underline
+
 */
 // constants 
 const FPS = 30; //30 frames per sec
@@ -58,7 +65,7 @@ class Timer {
         this.counter = initial;
         let intervalid = setInterval(() => {
             this.counter--;
-            console.log(`Countdown: ${this.counter}`);
+            // console.log(`Countdown: ${this.counter}`);
             if (this.counter === 0)
                 clearInterval(intervalid);
         }, 1000);
@@ -72,9 +79,6 @@ let timer = new Timer(10);
 function checkGame() {
     if (timer.timer === 0 && asteroidDebris.length < 10) {
         gameOver();
-    }
-    else {
-        return;
     }
 }
 setInterval(checkGame, 1000); //check game very second
@@ -283,7 +287,10 @@ function base() {
     ctx.textBaseline = "middle";
     ctx.fillStyle = lowTime ? "red" : "white";
     ctx.font = 20 + "px dejavu sans mono";
-    const timerTxt = "Time: " + timer.timer.toString();
+    let timerTxt = "Time: " + timer.timer.toString();
+    if (timer.timer === 0) {
+        timerTxt = "Timeout!";
+    }
     ctx.fillText(timerTxt, PEW_SIZE / 2, PEW_SIZE);
     //draw asteroids --------------------------------------
     // let x, y, r, a, vert, offs; 
