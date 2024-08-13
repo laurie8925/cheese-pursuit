@@ -23,7 +23,7 @@ const MIN_ROID_SPD = 100; //min starting speed of asteroid in pixels per second
 const ROIDS_SPD = 200; //max starting speed of asteroids in pixels per second 
 const ROIDS_VERT = 10; //average number of verticles on each asteroid 
 const EXPLODE_DUR = 0.3; //duratioin of the ship's explosion 
-const SHOW_BOUNDING = true; //show or hide collision bounding 
+const SHOW_BOUNDING = false; //show or hide collision bounding 
 const SHOW_CENTRE_DOT = false; //show or hide ship's center dot 
 const TEXT_FADE = 2.5; // text fade time in seconds
 const TEXT_SIZE = 40; //text font height in pixels 
@@ -31,31 +31,8 @@ let pewCollision = false;
 //get documents 
 const canv = document.getElementById("gameCanvas");
 const ctx = canv.getContext("2d");
-// const gameScr = document.getElementById("game-screen") as HTMLElement;
-// const startScr = document.getElementById("starting-screen") as HTMLElement;
-// const instrScr = document.getElementById("instruction-screen")as HTMLElement;
-// const lostScr = document.getElementById("gameover-screen")as HTMLElement;
-// const winScr = document.getElementById("winning-screen") as HTMLElement;
-// const menuScr = document.getElementById("menu-screen") as HTMLElement;
 const startBtn = document.getElementById("start-btn");
 //set all screen hidden 
-document.addEventListener('DOMContentLoaded', function () {
-    // function switchScreen(screenId:string) { 
-    //   document.querySelectorAll('.screen').forEach(function(screen) {
-    //     screen.classList.add('hidden');
-    //   });
-    //   // show the selected screen
-    //   // Type assertion to HTMLElement
-    //   const element = document.getElementById(screenId) as HTMLElement;
-    //   // Now you can safely access classList
-    //   element.classList.remove('hidden');
-    // }
-    // switchScreen('starting-screen')
-    // startBtn.addEventListener("click", ()=> { 
-    //   switchScreen('game-screen');
-    //   newGame();  
-    // })
-});
 function switchScreen(screenId) {
     document.querySelectorAll('.screen').forEach(function (screen) {
         screen.classList.add('hidden');
