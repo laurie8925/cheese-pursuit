@@ -28,8 +28,48 @@ const SHOW_CENTRE_DOT = false; //show or hide ship's center dot
 const TEXT_FADE = 2.5; // text fade time in seconds
 const TEXT_SIZE = 40; //text font height in pixels 
 let pewCollision = false;
+//get documents 
 const canv = document.getElementById("gameCanvas");
 const ctx = canv.getContext("2d");
+// const gameScr = document.getElementById("game-screen") as HTMLElement;
+// const startScr = document.getElementById("starting-screen") as HTMLElement;
+// const instrScr = document.getElementById("instruction-screen")as HTMLElement;
+// const lostScr = document.getElementById("gameover-screen")as HTMLElement;
+// const winScr = document.getElementById("winning-screen") as HTMLElement;
+// const menuScr = document.getElementById("menu-screen") as HTMLElement;
+const startBtn = document.getElementById("start-btn");
+//set all screen hidden 
+document.addEventListener('DOMContentLoaded', function () {
+    // function switchScreen(screenId:string) { 
+    //   document.querySelectorAll('.screen').forEach(function(screen) {
+    //     screen.classList.add('hidden');
+    //   });
+    //   // show the selected screen
+    //   // Type assertion to HTMLElement
+    //   const element = document.getElementById(screenId) as HTMLElement;
+    //   // Now you can safely access classList
+    //   element.classList.remove('hidden');
+    // }
+    // switchScreen('starting-screen')
+    // startBtn.addEventListener("click", ()=> { 
+    //   switchScreen('game-screen');
+    //   newGame();  
+    // })
+});
+function switchScreen(screenId) {
+    document.querySelectorAll('.screen').forEach(function (screen) {
+        screen.classList.add('hidden');
+    });
+    // show the selected screen
+    const element = document.getElementById(screenId);
+    // Now you can safely access classList
+    element.classList.remove('hidden');
+}
+switchScreen('starting-screen');
+startBtn.addEventListener("click", () => {
+    switchScreen('game-screen');
+    timer = new Timer(10);
+});
 //set up game parameters 
 let level, pew, roids, score, text, textAlpha;
 newGame();
@@ -74,7 +114,7 @@ class Timer {
         return this.counter;
     }
 }
-let timer = new Timer(10);
+let timer;
 //check timer and destoryed mouse number for game over
 function checkGame() {
     if (timer.timer === 0 && asteroidDebris.length < 10) {
