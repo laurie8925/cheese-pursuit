@@ -32,20 +32,28 @@ let pewCollision = false;
 const canv = document.getElementById("gameCanvas");
 const ctx = canv.getContext("2d");
 const startBtn = document.getElementById("start-btn");
+const instructionBtn = document.getElementById("instruction-btn");
+const toStartingScreen = document.querySelector('.to-starting-screen');
 //set all screen hidden 
 function switchScreen(screenId) {
-    document.querySelectorAll('.screen').forEach(function (screen) {
-        screen.classList.add('hidden');
+    document.querySelectorAll(".screen").forEach(function (screen) {
+        screen.classList.add("hidden");
     });
     // show the selected screen
     const element = document.getElementById(screenId);
     // Now you can safely access classList
-    element.classList.remove('hidden');
+    element.classList.remove("hidden");
 }
-switchScreen('starting-screen');
+switchScreen("starting-screen");
 startBtn.addEventListener("click", () => {
-    switchScreen('game-screen');
+    switchScreen("game-screen");
     timer = new Timer(10);
+});
+instructionBtn.addEventListener("click", () => {
+    switchScreen("instruction-screen");
+});
+toStartingScreen.addEventListener("click", () => {
+    switchScreen("starting-screen");
 });
 //set up game parameters 
 let level, pew, roids, score, text, textAlpha;
