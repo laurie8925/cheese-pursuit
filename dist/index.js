@@ -23,7 +23,7 @@ const MIN_ROID_SPD = 100; //min starting speed of asteroid in pixels per second
 const ROIDS_SPD = 200; //max starting speed of asteroids in pixels per second 
 const ROIDS_VERT = 10; //average number of verticles on each asteroid 
 const EXPLODE_DUR = 0.3; //duratioin of the ship's explosion 
-const SHOW_BOUNDING = false; //show or hide collision bounding 
+const SHOW_BOUNDING = true; //show or hide collision bounding 
 const SHOW_CENTRE_DOT = false; //show or hide ship's center dot 
 const TEXT_FADE = 2.5; // text fade time in seconds
 const TEXT_SIZE = 40; //text font height in pixels 
@@ -53,7 +53,7 @@ newGame();
 const mouse = new Image();
 mouse.src = "medias/mouse.png";
 const paw = new Image();
-paw.src = "medias/cat_paw.png";
+paw.src = "medias/cat_paw_2.png";
 //set up asteriod object 
 // let roids: Asteroid[] = []; 
 createAsteroidBelt();
@@ -248,12 +248,12 @@ function base() {
     }
     // draw the clicked rectangle if it exists
     if (!clicked) {
-        ctx.drawImage(paw, pew.x, pew.y, pew.w, pew.h * 1.5);
+        ctx.drawImage(paw, pew.x, pew.y, pew.w * 1.2, pew.h * 1.7);
     }
     else if (clickedRectangle && !pew.dead) { //activate cursor 
-        const centerX = clickedRectangle.x + pew.w / 2;
-        const centerY = clickedRectangle.y + pew.h / 2;
-        ctx.drawImage(paw, centerX - pew.w / 2, centerY - pew.h / 2, pew.w, pew.h * 1.5);
+        const centerX = clickedRectangle.x + pew.w * 1.2 / 2;
+        const centerY = clickedRectangle.y + pew.h * 1.7 / 2;
+        ctx.drawImage(paw, centerX - pew.w * 1.2 / 2, centerY - pew.h * 1.7 / 2, pew.w * 1.2, pew.h * 1.7);
         if (SHOW_BOUNDING) {
             ctx.strokeStyle = "lime";
             ctx.beginPath();
