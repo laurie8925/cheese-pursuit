@@ -232,7 +232,7 @@ function newPew() {
 function base() {
     // let exploding = pew.explodeTime > 0 
     //draw space 
-    ctx.fillStyle = "black";
+    ctx.fillStyle = "#537CBC";
     ctx.fillRect(0, 0, canv.width, canv.height); // draw a filled rectangle
     //draw pew (rectangle)---------------------------------------------------------
     ctx.strokeStyle = "white",
@@ -283,7 +283,7 @@ function base() {
     if (textAlpha >= 0) {
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.fillStyle = "rgba(255, 255, 255, " + textAlpha + ")";
+        ctx.fillStyle = "rgba(255, 205, 40, " + textAlpha + ")";
         ctx.font = "small-caps " + TEXT_SIZE + "px dejavu sans mono";
         ctx.fillText(text, canv.width / 2, canv.height * 0.75);
         textAlpha -= (1.0 / TEXT_FADE / FPS);
@@ -291,7 +291,7 @@ function base() {
     //draw the score
     ctx.textAlign = "left";
     ctx.textBaseline = "middle";
-    ctx.fillStyle = "white";
+    ctx.fillStyle = "rgba(255, 205, 40)";
     ctx.font = 30 + "px dejavu sans mono";
     const scoreTxt = "Score: " + score.toString(); //turn into string 
     ctx.fillText(scoreTxt, canv.width - PEW_SIZE * 4.5, PEW_SIZE);
@@ -302,7 +302,7 @@ function base() {
     }
     ctx.textAlign = "left";
     ctx.textBaseline = "middle";
-    ctx.fillStyle = lowTime ? "red" : "white";
+    ctx.fillStyle = lowTime ? "red" : "rgba(255, 205, 40)";
     ctx.font = 20 + "px dejavu sans mono";
     let timerTxt = "Time: " + timer.timer.toString();
     if (timer.timer === 0) {
