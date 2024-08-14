@@ -14,7 +14,8 @@ main {
   align-items: center;
 }
 
-#starting-screen {
+#starting-screen,
+#instruction-screen {
   background-image: url("medias/cheesy_bg.jpg");
   background-position: center;
   background-repeat: no-repeat;
