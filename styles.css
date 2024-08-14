@@ -1,5 +1,5 @@
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 body {
@@ -12,4 +12,19 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+#starting-screen {
+  background-image: url("medias/cheesy_bg.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-color: rgb(141, 141, 194);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 600px;
+  height: 500px;
 }
