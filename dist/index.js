@@ -46,24 +46,45 @@ function switchScreen(screenId) {
 switchScreen("starting-screen");
 startBtn.addEventListener("click", () => {
     switchScreen("game-screen");
-    timer = new Timer(10);
     newGame();
 });
 instructionBtn.addEventListener("click", () => {
     switchScreen("instruction-screen");
 });
-document.addEventListener("DOMContentLoaded", () => {
-    const homeBtns = document.getElementsByClassName("home-btn"); // Get all elements with class "home-btn"
-    for (let i = 0; i < homeBtns.length; i++) {
-        const homeBtn = homeBtns[i];
-        homeBtn.addEventListener('click', (event) => {
-            event.preventDefault(); // Prevent the default action
-            event.stopImmediatePropagation(); // Stop further propagation
-            // Switch to the starting screen
-            switchScreen("starting-screen");
-        });
-    }
-});
+function buttonQuery(btnClassName, screen) {
+    document.addEventListener("DOMContentLoaded", () => {
+        let buttons = document.getElementsByClassName(btnClassName);
+        for (let i = 0; i < buttons.length; i++) {
+            const button = buttons[i];
+            button.addEventListener('click', (event) => {
+                event.preventDefault(); // Prevent the default action
+                event.stopImmediatePropagation(); // Stop further propagation
+                // Switch to the starting screen
+                switchScreen(screen);
+                if (screen === "game-screen") {
+                    newGame();
+                }
+            });
+        }
+    });
+}
+;
+buttonQuery("home-btn", "starting-screen");
+buttonQuery("game-btn", "game-screen");
+// document.addEventListener("DOMContentLoaded", () => {
+//   const homeBtns = document.getElementsByClassName("home-btn"); 
+//   const restartBtn = document.getElementsByClassName("restart-game");// Get all elements with class "home-btn"
+//   document.getElementsByClassName()
+//   for (let i = 0; i < homeBtns.length; i++) {
+//     const homeBtn = homeBtns[i]; 
+//     homeBtn.addEventListener('click', (event) => {
+//       event.preventDefault(); // Prevent the default action
+//       event.stopImmediatePropagation(); // Stop further propagation
+//       // Switch to the starting screen
+//       switchScreen("starting-screen");
+//     });
+//   }
+// });
 //set up game parameters 
 let level, pew, roids, score, text, textAlpha;
 // newGame();  
@@ -192,6 +213,7 @@ function newAsteroid(x, y, r) {
     const unitX = dx / (Math.sqrt(dx * dx + dy * +dy));
     const unitY = dy / (Math.sqrt(dx * dx + dy * +dy));
     const speed = (Math.random() * lvlMul * (ROIDS_SPD - MIN_ROID_SPD) + MIN_ROID_SPD) / FPS;
+    console.log(lvlMul);
     let roid = {
         x: x,
         y: y,
@@ -220,10 +242,12 @@ function newGame() {
             gameOver();
         }
     }, 1000); //check game very second
+    timer = new Timer(10);
     level = 1;
     pew = newPew();
     score = 0;
     createAsteroidBelt();
+    console.log(level);
 }
 function newLevel() {
     asteroidDebris = []; //empty score
