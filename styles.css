@@ -20,7 +20,8 @@ main {
 }
 
 #starting-screen,
-#instruction-screen {
+#instruction-screen,
+#gameover-screen {
   background-image: url("medias/cheesy_bg.jpg");
   background-position: center;
   background-repeat: no-repeat;
@@ -33,7 +34,7 @@ main {
   align-items: center;
 }
 
-.starting-content {
+.content {
   background-color: rgba(0, 0, 0, 0.849);
   color: rgb(255, 205, 40);
   display: flex;
