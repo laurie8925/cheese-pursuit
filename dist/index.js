@@ -56,7 +56,7 @@ function buttonQuery(btnClassName, screen) {
         let buttons = document.getElementsByClassName(btnClassName);
         for (let i = 0; i < buttons.length; i++) {
             const button = buttons[i];
-            button.addEventListener('click', (event) => {
+            button.addEventListener("click", (event) => {
                 event.preventDefault(); // Prevent the default action
                 event.stopImmediatePropagation(); // Stop further propagation
                 // Switch to the starting screen
@@ -130,12 +130,12 @@ class Timer {
 }
 let timer;
 //check timer and destoryed mouse number for game over
-function checkGame() {
-    if (timer.timer === 0 && asteroidDebris.length < 10) {
-        gameOver();
-    }
-    return;
-}
+// function checkGame() { 
+//   if (timer.timer === 0 && asteroidDebris.length < 10){ 
+//     gameOver();
+//   }
+//   return;
+// }
 // setInterval(checkGame, 1000); //check game very second
 function createAsteroidBelt() {
     roids = [];
@@ -185,13 +185,13 @@ function destroyAsteroids(index) {
         //increase level
         newLevel();
         //increase difficulty when hit every 10 level
-        if (level % 10 === 0) {
+        if (level === 100) {
+            return;
+        }
+        else if (level % 10 === 0) {
             ROIDS_SIZE = ROIDS_SIZE - 5;
             roids.push(newAsteroid(x, y, Math.ceil(ROIDS_SIZE / 2)));
             PEW_SIZE -= 2.5;
-        }
-        else if (level === 100) {
-            return;
         }
     }
     else if (level === 100) {
@@ -213,14 +213,14 @@ function newAsteroid(x, y, r) {
     const unitX = dx / (Math.sqrt(dx * dx + dy * +dy));
     const unitY = dy / (Math.sqrt(dx * dx + dy * +dy));
     const speed = (Math.random() * lvlMul * (ROIDS_SPD - MIN_ROID_SPD) + MIN_ROID_SPD) / FPS;
-    console.log(lvlMul);
+    const direction = Math.random() < 0.5 ? 1 : -1; // math random if less than 0.5, go positive, otherwsie go negative
     let roid = {
         x: x,
         y: y,
         //x velocity
-        xv: unitX * speed * (Math.random() < 0.5 ? 1 : -1), // math random if less than 0.5, go positive, otherwsie go negative
+        xv: unitX * speed * direction,
         //y velocity 
-        yv: unitY * speed * (Math.random() < 0.5 ? 1 : -1),
+        yv: unitY * speed * direction,
         r: r, //radius 
         a: Math.random() * Math.PI * 2, //angles in radians
         vert: Math.floor(Math.random() * (ROIDS_VERT + 1) + ROIDS_VERT / 2),
@@ -228,14 +228,15 @@ function newAsteroid(x, y, r) {
         rotation: 0,
     };
     //create the vertex offset array 
-    for (var i = 0; i < roid.vert; i++) {
-        roid.offs.push(Math.random() * ROIDS_JAG * 2 + 1 - ROIDS_JAG);
-    }
+    // for (var i = 0; i < roid.vert; i++){ 
+    //   roid.offs.push(Math.random() * ROIDS_JAG *  2 + 1 - ROIDS_JAG); 
+    // }
+    console.log(roid.xv, roid.yv);
     return roid;
 }
 let checkGameId;
+let gameLoop;
 function newGame() {
-    setInterval(base, 1000 / FPS);
     //check here after timer.timer is declared
     checkGameId = setInterval(() => {
         if (timer.timer === 0 && asteroidDebris.length < 10) {
@@ -247,14 +248,13 @@ function newGame() {
     pew = newPew();
     score = 0;
     createAsteroidBelt();
-    console.log(level);
+    gameLoop = setInterval(base, 1000 / FPS);
 }
 function newLevel() {
     asteroidDebris = []; //empty score
     level++; //increase level
     text = "Level " + level;
     textAlpha = 1;
-    console.log(level);
     timer = new Timer(10); //new timer
 }
 function winGame() {
@@ -265,6 +265,7 @@ function winGame() {
 function gameOver() {
     switchScreen("gameover-screen");
     clearInterval(checkGameId);
+    clearInterval(gameLoop);
     // text = "Game Over :("
     // textAlpha = 1; 
     pew.dead = true;
@@ -369,6 +370,7 @@ function base() {
         ctx.lineWidth = PEW_SIZE / 20;
         //get the asteroid properties 
         const { x, y, r, a, vert, offs } = roids[i];
+        //move the asteroid
         roids[i].x += roids[i].xv;
         roids[i].y += roids[i].yv;
         const rotate = Math.atan2(roids[i].yv, roids[i].xv) + (90 * Math.PI / 180); //find angle + 1.5 to adjust angle facing
