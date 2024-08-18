@@ -33,7 +33,6 @@ const canv = document.getElementById("gameCanvas");
 const ctx = canv.getContext("2d");
 const startBtn = document.getElementById("start-btn");
 const instructionBtn = document.getElementById("instruction-btn");
-const toStartingScreen = document.querySelector('.to-starting-screen');
 //set all screen hidden 
 function switchScreen(screenId) {
     document.querySelectorAll(".screen").forEach(function (screen) {
@@ -48,27 +47,36 @@ switchScreen("starting-screen");
 startBtn.addEventListener("click", () => {
     switchScreen("game-screen");
     timer = new Timer(10);
+    newGame();
 });
 instructionBtn.addEventListener("click", () => {
     switchScreen("instruction-screen");
 });
-toStartingScreen.addEventListener("click", () => {
-    switchScreen("starting-screen");
+document.addEventListener("DOMContentLoaded", () => {
+    const homeBtns = document.getElementsByClassName("home-btn"); // Get all elements with class "home-btn"
+    for (let i = 0; i < homeBtns.length; i++) {
+        const homeBtn = homeBtns[i];
+        homeBtn.addEventListener('click', (event) => {
+            event.preventDefault(); // Prevent the default action
+            event.stopImmediatePropagation(); // Stop further propagation
+            // Switch to the starting screen
+            switchScreen("starting-screen");
+        });
+    }
 });
 //set up game parameters 
 let level, pew, roids, score, text, textAlpha;
-newGame();
+// newGame();  
 const mouse = new Image();
 mouse.src = "medias/mouse.png";
 const paw = new Image();
 paw.src = "medias/cat_paw_2.png";
 //set up asteriod object 
 // let roids: Asteroid[] = []; 
-createAsteroidBelt();
+// createAsteroidBelt(); 
 let asteroidDebris = [];
 let clicked = false;
 let clickedRectangle = null; //position of clicked rec (if x and y number else null)
-setInterval(base, 1000 / FPS);
 canv.addEventListener("click", handleCanvasClick);
 function handleCanvasClick(ev) {
     if (pew.dead) {
@@ -105,8 +113,9 @@ function checkGame() {
     if (timer.timer === 0 && asteroidDebris.length < 10) {
         gameOver();
     }
+    return;
 }
-setInterval(checkGame, 1000); //check game very second
+// setInterval(checkGame, 1000); //check game very second
 function createAsteroidBelt() {
     roids = [];
     let x, y;
@@ -202,10 +211,19 @@ function newAsteroid(x, y, r) {
     }
     return roid;
 }
+let checkGameId;
 function newGame() {
+    setInterval(base, 1000 / FPS);
+    //check here after timer.timer is declared
+    checkGameId = setInterval(() => {
+        if (timer.timer === 0 && asteroidDebris.length < 10) {
+            gameOver();
+        }
+    }, 1000); //check game very second
     level = 1;
     pew = newPew();
     score = 0;
+    createAsteroidBelt();
 }
 function newLevel() {
     asteroidDebris = []; //empty score
@@ -216,12 +234,15 @@ function newLevel() {
     timer = new Timer(10); //new timer
 }
 function winGame() {
+    switchScreen("winning-screen");
     text = "You Beat the Game! Congradulation!!!!";
     textAlpha = 1;
 }
 function gameOver() {
-    text = "Game Over :(";
-    textAlpha = 1;
+    switchScreen("gameover-screen");
+    clearInterval(checkGameId);
+    // text = "Game Over :("
+    // textAlpha = 1; 
     pew.dead = true;
     // ctx!.clearRect(0, 0, canv.width, canv.height);
 }
