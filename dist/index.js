@@ -71,20 +71,6 @@ function buttonQuery(btnClassName, screen) {
 ;
 buttonQuery("home-btn", "starting-screen");
 buttonQuery("game-btn", "game-screen");
-// document.addEventListener("DOMContentLoaded", () => {
-//   const homeBtns = document.getElementsByClassName("home-btn"); 
-//   const restartBtn = document.getElementsByClassName("restart-game");// Get all elements with class "home-btn"
-//   document.getElementsByClassName()
-//   for (let i = 0; i < homeBtns.length; i++) {
-//     const homeBtn = homeBtns[i]; 
-//     homeBtn.addEventListener('click', (event) => {
-//       event.preventDefault(); // Prevent the default action
-//       event.stopImmediatePropagation(); // Stop further propagation
-//       // Switch to the starting screen
-//       switchScreen("starting-screen");
-//     });
-//   }
-// });
 //set up game parameters 
 let level, pew, roids, score, text, textAlpha;
 // newGame();  
@@ -237,12 +223,13 @@ function newAsteroid(x, y, r) {
 let checkGameId;
 let gameLoop;
 function newGame() {
+    clearInterval(gameLoop);
     //check here after timer.timer is declared
     checkGameId = setInterval(() => {
         if (timer.timer === 0 && asteroidDebris.length < 10) {
             gameOver();
         }
-    }, 1000); //check game very second
+    }, 500); //check game very second
     timer = new Timer(10);
     level = 1;
     pew = newPew();
@@ -259,8 +246,11 @@ function newLevel() {
 }
 function winGame() {
     switchScreen("winning-screen");
-    text = "You Beat the Game! Congradulation!!!!";
-    textAlpha = 1;
+    // text = "You Beat the Game! Congradulation!!!!"
+    clearInterval(checkGameId);
+    clearInterval(gameLoop);
+    pew.dead = true;
+    // textAlpha = 1; 
 }
 function gameOver() {
     switchScreen("gameover-screen");
@@ -284,7 +274,6 @@ function newPew() {
     };
 }
 function base() {
-    // let exploding = pew.explodeTime > 0 
     //draw space 
     ctx.fillStyle = "#537CBC";
     ctx.fillRect(0, 0, canv.width, canv.height); // draw a filled rectangle
@@ -338,7 +327,7 @@ function base() {
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillStyle = "rgba(255, 205, 40, " + textAlpha + ")";
-        ctx.font = "small-caps " + TEXT_SIZE + "px dejavu sans mono";
+        ctx.font = "small-caps " + TEXT_SIZE + "px Poppins";
         ctx.fillText(text, canv.width / 2, canv.height * 0.75);
         textAlpha -= (1.0 / TEXT_FADE / FPS);
     }
@@ -346,7 +335,7 @@ function base() {
     ctx.textAlign = "left";
     ctx.textBaseline = "middle";
     ctx.fillStyle = "rgba(255, 205, 40)";
-    ctx.font = 30 + "px dejavu sans mono";
+    ctx.font = 30 + "px Poppins";
     const scoreTxt = "Score: " + score.toString(); //turn into string 
     ctx.fillText(scoreTxt, canv.width - PEW_SIZE * 4.5, PEW_SIZE);
     //draw timer
@@ -357,7 +346,7 @@ function base() {
     ctx.textAlign = "left";
     ctx.textBaseline = "middle";
     ctx.fillStyle = lowTime ? "red" : "rgba(255, 205, 40)";
-    ctx.font = 20 + "px dejavu sans mono";
+    ctx.font = 20 + "px Poppins";
     let timerTxt = "Time: " + timer.timer.toString();
     if (timer.timer === 0) {
         timerTxt = "Timeout!";
@@ -379,17 +368,6 @@ function base() {
         ctx.rotate(rotate); //rotate to roid rotation
         ctx.drawImage(mouse, -r, -r, r * 2, r * 2);
         ctx.restore();
-        if (SHOW_BOUNDING) {
-            ctx.strokeStyle = "lime";
-            ctx.beginPath();
-            ctx.arc(x, y, r, 0, Math.PI * 2, false);
-            ctx.stroke();
-        }
-    }
-    //move the asteroid 
-    for (let i = 0; i < roids.length; i++) {
-        // roids[i].x += roids[i].xv; 
-        // roids[i].y += roids[i].yv;
         //handle edge of screen 
         //if go off screen, it will appear on the other side 
         //x direction 
@@ -405,6 +383,12 @@ function base() {
         }
         else if (roids[i].y > canv.height + roids[i].r) {
             roids[i].y = 0 - roids[i].r;
+        }
+        if (SHOW_BOUNDING) {
+            ctx.strokeStyle = "lime";
+            ctx.beginPath();
+            ctx.arc(x, y, r, 0, Math.PI * 2, false);
+            ctx.stroke();
         }
     }
 }
