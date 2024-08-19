@@ -60,15 +60,17 @@ function switchScreenBtn(buttonId, screenId) {
 }
 ;
 switchScreen("starting-screen");
-// startBtn.addEventListener("click", ()=> { 
-//   switchScreen("game-screen");
-//   newGame();
-// })
 switchScreenBtn("start-btn", "game-screen");
 switchScreenBtn("instruction-btn", "instruction-screen");
 switchScreenBtn("music-btn", "music-screen");
 menuBtn.addEventListener("click", () => {
     switchScreen("menu-screen");
+});
+document.body.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") {
+        switchScreen("menu-screen");
+    }
+    return;
 });
 //for class buttons 
 function buttonQuery(btnClassName, screen) {
@@ -84,6 +86,13 @@ function buttonQuery(btnClassName, screen) {
                 if (screen === "game-screen") {
                     newGame();
                 }
+                else if (screen === "starting-screen") {
+                    clearInterval(gameLoop);
+                    clearInterval(checkGameId);
+                    pew.dead = true;
+                }
+                // Switch to the starting screen
+                switchScreen(screen);
             });
         }
     });
@@ -109,21 +118,23 @@ catch (error) {
 }
 playPauseButton.addEventListener("click", () => {
     if (player.paused) {
+        //shows pause button when music plays
         player.play();
-        playPauseButton.innerHTML =
-            `
-<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-player-pause-filled" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffcd28" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-  <path d="M9 4h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h2a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2z" stroke-width="0" fill="#ffcd28" />
-  <path d="M17 4h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h2a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2z" stroke-width="0" fill="#ffcd28" />
-</svg>`;
+        playPauseButton.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-player-pause-filled" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffcd28" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+          <path d="M9 4h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h2a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2z" stroke-width="0" fill="#ffcd28" />
+          <path d="M17 4h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h2a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2z" stroke-width="0" fill="#ffcd28" />
+      </svg>`; //pause button svg
     }
     else {
+        //shows play button when music is paused
         player.pause();
-        playPauseButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-player-play-filled" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffcd28" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-  <path d="M6 4v16a1 1 0 0 0 1.524 .852l13 -8a1 1 0 0 0 0 -1.704l-13 -8a1 1 0 0 0 -1.524 .852z" stroke-width="0" fill="#ffcd28" />
-</svg>`;
+        playPauseButton.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-player-play-filled" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffcd28" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+          <path d="M6 4v16a1 1 0 0 0 1.524 .852l13 -8a1 1 0 0 0 0 -1.704l-13 -8a1 1 0 0 0 -1.524 .852z" stroke-width="0" fill="#ffcd28" />
+      </svg>`; //play button svg
     }
 });
 // Optional: Add event listener for volume slider
@@ -134,7 +145,6 @@ if (volumeSlider) {
         if (volumeDisplay) {
             volumeDisplay.textContent = `${(currentVolume)}`;
         }
-        console.log(currentVolume);
         if (currentVolume === 0) {
             volumeSvg.innerHTML = `
       <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-volume-3" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffcd28" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -145,20 +155,20 @@ if (volumeSlider) {
         }
         else if (currentVolume > 0 && currentVolume <= 5) {
             volumeSvg.innerHTML = `
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-volume-2" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffcd28" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                    <path d="M15 8a5 5 0 0 1 0 8" />
-                    <path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5" />
-                </svg>`;
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-volume-2" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffcd28" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <path d="M15 8a5 5 0 0 1 0 8" />
+            <path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5" />
+        </svg>`;
         }
         else {
             volumeSvg.innerHTML = `
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-volume" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffcd28" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-  <path d="M15 8a5 5 0 0 1 0 8" />
-  <path d="M17.7 5a9 9 0 0 1 0 14" />
-  <path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5" />
-</svg>`;
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-volume" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffcd28" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+          <path d="M15 8a5 5 0 0 1 0 8" />
+          <path d="M17.7 5a9 9 0 0 1 0 14" />
+          <path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5" />
+        </svg>`;
         }
     };
     // volumeSlider.addEventListener("change", (event) => {
@@ -317,7 +327,6 @@ function newAsteroid(x, y, r) {
     // for (var i = 0; i < roid.vert; i++){ 
     //   roid.offs.push(Math.random() * ROIDS_JAG *  2 + 1 - ROIDS_JAG); 
     // }
-    console.log(roid.xv, roid.yv);
     return roid;
 }
 let checkGameId;
@@ -326,6 +335,7 @@ function newGame() {
     clearInterval(gameLoop);
     //check here after timer.timer is declared
     checkGameId = setInterval(() => {
+        console.log(timer.timer);
         if (timer.timer === 0 && asteroidDebris.length < 10) {
             gameOver();
         }
