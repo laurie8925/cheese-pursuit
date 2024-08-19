@@ -44,7 +44,8 @@ function switchScreen(screenId) {
     // Now you can safely access classList
     element.classList.remove("hidden");
 }
-function buttonQueryById(buttonId, screenId) {
+//for id buttons for swtiching screens
+function switchScreenBtn(buttonId, screenId) {
     const button = document.getElementById(buttonId);
     button.addEventListener("click", () => {
         switchScreen(screenId);
@@ -59,13 +60,15 @@ switchScreen("starting-screen");
 //   switchScreen("game-screen");
 //   newGame();
 // })
-buttonQueryById("start-btn", "game-screen");
-instructionBtn.addEventListener("click", () => {
-    switchScreen("instruction-screen");
-});
+switchScreenBtn("start-btn", "game-screen");
+switchScreenBtn("instruction-btn", "instruction-screen");
+// instructionBtn.addEventListener("click", ()=> { 
+//   switchScreen("instruction-screen");
+// })
 menuBtn.addEventListener("click", () => {
     switchScreen("menu-screen");
 });
+//for class buttons 
 function buttonQuery(btnClassName, screen) {
     document.addEventListener("DOMContentLoaded", () => {
         let buttons = document.getElementsByClassName(btnClassName);
