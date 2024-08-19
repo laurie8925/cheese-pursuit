@@ -9,6 +9,10 @@ instruction: back to homepage
 menu: mute/unmute, resume, restart, exit to losing screen
 losing: replay, back to homepage + level and score
 winning: replay, back to homepage
+
+add escape function to access menu page
+need to add pause and resume to game
+menu restart button doesn't work
  */
 /*FIXME:
 
@@ -63,20 +67,9 @@ switchScreen("starting-screen");
 switchScreenBtn("start-btn", "game-screen");
 switchScreenBtn("instruction-btn", "instruction-screen");
 switchScreenBtn("music-btn", "music-screen");
-// instructionBtn.addEventListener("click", ()=> { 
-//   switchScreen("instruction-screen");
-// })
 menuBtn.addEventListener("click", () => {
     switchScreen("menu-screen");
 });
-// document.body.addEventListener('keydown', function(e: KeyboardEvent) {
-//   if (e.key === "Escape") {
-//     const menu = document.getElementById("menu-screen") as HTMLElement; 
-//     if (menu) { 
-//       switchScreen("menu-screen");
-//     }
-//   }
-// });
 //for class buttons 
 function buttonQuery(btnClassName, screen) {
     document.addEventListener("DOMContentLoaded", () => {
