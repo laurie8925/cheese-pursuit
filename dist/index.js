@@ -98,7 +98,7 @@ const playPauseButton = document.getElementById("play");
 if (!player || !volumeSlider || !playPauseButton) {
     console.error("One or more elements not found.");
 }
-player.play();
+player.pause();
 playPauseButton.addEventListener("click", () => {
     if (!player.paused) {
         player.pause();
