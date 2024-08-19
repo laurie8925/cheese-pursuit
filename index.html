@@ -59,7 +59,11 @@
         <div class="content">
           <h3>Music Volume</h3>
           <div class="music-container">
-            <audio id="player" src="medias/Baby-Tiger.mp3"></audio>
+            <audio
+              id="player"
+              src="medias/Baby-Tiger.mp3"
+              preload="auto"
+            ></audio>
             <button id="play">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -81,32 +85,6 @@
                 />
               </svg>
             </button>
-            <!-- <button id="pause" style="display: none">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="icon icon-tabler icon-tabler-volume-off"
-                width="44"
-                height="44"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="#ffcd28"
-                fill="none"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                <path
-                  d="M15 8a5 5 0 0 1 1.912 4.934m-1.377 2.602a5 5 0 0 1 -.535 .464"
-                />
-                <path
-                  d="M17.7 5a9 9 0 0 1 2.362 11.086m-1.676 2.299a9 9 0 0 1 -.686 .615"
-                />
-                <path
-                  d="M9.069 5.054l.431 -.554a.8 .8 0 0 1 1.5 .5v2m0 4v8a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l1.294 -1.664"
-                />
-                <path d="M3 3l18 18" />
-              </svg>
-            </button> -->
             <input
               type="range"
               id="music-control"
@@ -116,7 +94,6 @@
             />
             <p id="volume-display">10</p>
           </div>
-
           <button class="home-btn">Home</button>
         </div>
       </div>
@@ -153,7 +130,42 @@
       <div id="menu-screen" class="screen">
         <div class="content">
           <h3>Menu</h3>
-          <input type="range" id="music-control" min="0" max="10" value="10" />
+          <div class="music-container">
+            <audio
+              id="player"
+              src="medias/Baby-Tiger.mp3"
+              preload="auto"
+            ></audio>
+            <button id="play">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="icon icon-tabler icon-tabler-volume"
+                width="44"
+                height="44"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="#ffcd28"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M15 8a5 5 0 0 1 0 8" />
+                <path d="M17.7 5a9 9 0 0 1 0 14" />
+                <path
+                  d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5"
+                />
+              </svg>
+            </button>
+            <input
+              type="range"
+              id="music-control"
+              min="0"
+              max="10"
+              value="10"
+            />
+            <p id="volume-display">10</p>
+          </div>
           <button id="resume-btn">Resume</button>
           <button id="game-btn">Restart</button>
           <button class="home-btn">Home</button>
