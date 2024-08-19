@@ -66,12 +66,25 @@ switchScreenBtn("music-btn", "music-screen");
 menuBtn.addEventListener("click", () => {
     switchScreen("menu-screen");
 });
-document.body.addEventListener("keydown", function (e) {
-    if (e.key === "Escape") {
-        switchScreen("menu-screen");
-    }
-    return;
-});
+function menuScreen() {
+    let isEscPressed = false;
+    document.body.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") {
+            if (!isEscPressed) {
+                switchScreen("menu-screen");
+                console.log("pause at " + timer.timer);
+                timer.pause();
+            }
+            else {
+                switchScreen("game-screen");
+                timer.resume();
+                console.log("Starting " + timer.timer);
+            }
+            isEscPressed = !isEscPressed; // Toggle the state
+        }
+    });
+}
+;
 //for class buttons 
 function buttonQuery(btnClassName, screen) {
     document.addEventListener("DOMContentLoaded", () => {
@@ -212,16 +225,46 @@ let counter;
 class Timer {
     constructor(initial) {
         this.initial = initial;
+        this.isPaused = false;
+        this.remainingTime = 0;
         this.counter = initial;
-        let intervalid = setInterval(() => {
-            this.counter--;
+        this.intervalid = setInterval(() => {
+            if (!this.isPaused) {
+                this.counter--;
+                if (this.counter === 0) {
+                    clearInterval(this.intervalid);
+                    this.intervalid = undefined;
+                }
+            }
             // console.log(`Countdown: ${this.counter}`);
-            if (this.counter === 0)
-                clearInterval(intervalid);
         }, 1000);
     }
     get timer() {
         return this.counter;
+    }
+    pause() {
+        this.isPaused = true;
+        this.remainingTime = this.counter;
+        clearInterval(this.intervalid);
+        this.intervalid = undefined;
+    }
+    resume() {
+        this.isPaused = false;
+        this.intervalid = setInterval(() => {
+            if (!this.isPaused) {
+                this.counter--;
+                // console.log(`Countdown: ${this.counter}`);
+                if (this.counter === 0) {
+                    clearInterval(this.intervalid);
+                    this.intervalid = undefined;
+                }
+            }
+        }, 1000);
+    }
+    reset() {
+        this.pause();
+        this.counter = this.initial;
+        this.resume();
     }
 }
 let timer;
@@ -348,6 +391,7 @@ function newGame() {
     score = 0;
     createAsteroidBelt();
     gameLoop = setInterval(base, 1000 / FPS);
+    menuScreen();
 }
 function newLevel() {
     asteroidDebris = []; //empty score
