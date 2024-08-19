@@ -94,7 +94,8 @@ buttonQuery("game-btn", "game-screen");
 //music 
 const player = new Audio("medias/Baby-Tiger.mp3"); // Ensure this path is correct
 const volumeSlider = document.getElementById("music-control");
-const volumeDisplay = document.getElementById("volume-display"); // Optional
+const volumeDisplay = document.getElementById("volume-display");
+const volumeSvg = document.getElementById("volume-svg");
 const playPauseButton = document.getElementById("play");
 // const pauseButton = document.getElementById("pause") as HTMLInputElement;
 if (!player || !volumeSlider || !playPauseButton) {
@@ -107,81 +108,69 @@ catch (error) {
     console.error('Playback failed:', error);
 }
 playPauseButton.addEventListener("click", () => {
-    if (!player.paused) {
-        player.pause();
-        playPauseButton.innerHTML = `<svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="icon icon-tabler icon-tabler-volume-off"
-                width="44"
-                height="44"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="#ffcd28"
-                fill="none"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                <path
-                  d="M15 8a5 5 0 0 1 1.912 4.934m-1.377 2.602a5 5 0 0 1 -.535 .464"
-                />
-                <path
-                  d="M17.7 5a9 9 0 0 1 2.362 11.086m-1.676 2.299a9 9 0 0 1 -.686 .615"
-                />
-                <path
-                  d="M9.069 5.054l.431 -.554a.8 .8 0 0 1 1.5 .5v2m0 4v8a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l1.294 -1.664"
-                />
-                <path d="M3 3l18 18" />
-              </svg>`;
+    if (player.paused) {
+        player.play();
+        playPauseButton.innerHTML =
+            `
+<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-player-pause-filled" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffcd28" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 4h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h2a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2z" stroke-width="0" fill="#ffcd28" />
+  <path d="M17 4h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h2a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2z" stroke-width="0" fill="#ffcd28" />
+</svg>`;
     }
     else {
-        player.play();
-        playPauseButton.innerHTML = `<svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="icon icon-tabler icon-tabler-volume"
-                width="44"
-                height="44"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="#ffcd28"
-                fill="none"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                <path d="M15 8a5 5 0 0 1 0 8" />
-                <path d="M17.7 5a9 9 0 0 1 0 14" />
-                <path
-                  d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5"
-                />
-              </svg>`;
+        player.pause();
+        playPauseButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-player-play-filled" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffcd28" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M6 4v16a1 1 0 0 0 1.524 .852l13 -8a1 1 0 0 0 0 -1.704l-13 -8a1 1 0 0 0 -1.524 .852z" stroke-width="0" fill="#ffcd28" />
+</svg>`;
     }
 });
 // Optional: Add event listener for volume slider
 if (volumeSlider) {
-    volumeSlider.addEventListener("change", (event) => {
-        const target = event.target;
-        player.volume = target.valueAsNumber / 10; // Assuming the slider goes from 0 to 100
+    const updateVolume = () => {
+        const currentVolume = volumeSlider.valueAsNumber;
+        player.volume = currentVolume / 10;
         if (volumeDisplay) {
-            volumeDisplay.textContent = `${(target.valueAsNumber / 100 * 100)}`; // Display volume as percentage
+            volumeDisplay.textContent = `${(currentVolume)}`;
         }
-    });
+        console.log(currentVolume);
+        if (currentVolume === 0) {
+            volumeSvg.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-volume-3" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffcd28" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+          <path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5" />
+          <path d="M16 10l4 4m0 -4l-4 4" />
+      </svg>`;
+        }
+        else if (currentVolume > 0 && currentVolume <= 5) {
+            volumeSvg.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-volume-2" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffcd28" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M15 8a5 5 0 0 1 0 8" />
+                    <path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5" />
+                </svg>`;
+        }
+        else {
+            volumeSvg.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-volume" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffcd28" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M15 8a5 5 0 0 1 0 8" />
+  <path d="M17.7 5a9 9 0 0 1 0 14" />
+  <path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5" />
+</svg>`;
+        }
+    };
+    // volumeSlider.addEventListener("change", (event) => {
+    //     const target = event.target as HTMLInputElement;
+    //     player.volume = target.valueAsNumber / 10; 
+    //     if (volumeDisplay) {
+    //         volumeDisplay.textContent = `${(target.valueAsNumber)}`; // display volume as percentage
+    //     }
+    // });
+    volumeSlider.addEventListener("change", updateVolume);
+    setInterval(updateVolume, 100);
 }
-// document.addEventListener('DOMContentLoaded', function() {
-//   let audio = new Audio("medias/Baby-tiger.mp3"); // Ensure this path is correct
-//   let volumeControl = document.querySelector("#music-control") as HTMLElement;
-//   if(volumeControl) {
-//       volumeControl.addEventListener("change", function(e) {
-//           // Map the slider value (0-10) to volume (0.0 - 1.0)
-//           const target = e.target as HTMLInputElement;
-//           // Now TypeScript knows target.value is safe to use
-//           audio.volume = target.valueAsNumber / 10; // Use valueAsNumber for numeric inputs
-//           audio.play();
-//       });
-//   } else {
-//       console.error("Volume control element not found.");
-//   }
-// });
 //set up game parameters 
 let level, pew, roids, score, text, textAlpha;
 // newGame();  

@@ -12,7 +12,6 @@ body {
 }
 
 p,
-button,
 ol,
 li,
 ul {
@@ -66,6 +65,7 @@ main {
     border-radius: 10px;
     border: none;
     background-color: rgb(255, 205, 40);
+    font-family: "Poppins", Helvetica, sans-serif;
   }
   h3 {
     margin: 0.5rem;
@@ -83,9 +83,14 @@ main {
   #play,
   #pause {
     width: fit-content;
-    padding: none;
-    border-radius: none;
+    height: fit-content;
+    padding: 0;
     border: none;
     background-color: rgba(255, 255, 255, 0);
+    display: flex;
+  }
+  #volume-svg {
+    display: flex;
+    width: 10%;
   }
 }
