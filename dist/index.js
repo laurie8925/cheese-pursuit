@@ -33,6 +33,7 @@ const canv = document.getElementById("gameCanvas");
 const ctx = canv.getContext("2d");
 const startBtn = document.getElementById("start-btn");
 const instructionBtn = document.getElementById("instruction-btn");
+const menuBtn = document.getElementById("menu-btn");
 //set all screen hidden 
 function switchScreen(screenId) {
     document.querySelectorAll(".screen").forEach(function (screen) {
@@ -43,13 +44,27 @@ function switchScreen(screenId) {
     // Now you can safely access classList
     element.classList.remove("hidden");
 }
+function buttonQueryById(buttonId, screenId) {
+    const button = document.getElementById(buttonId);
+    button.addEventListener("click", () => {
+        switchScreen(screenId);
+        if (screenId === "game-screen") {
+            newGame();
+        }
+    });
+}
+;
 switchScreen("starting-screen");
-startBtn.addEventListener("click", () => {
-    switchScreen("game-screen");
-    newGame();
-});
+// startBtn.addEventListener("click", ()=> { 
+//   switchScreen("game-screen");
+//   newGame();
+// })
+buttonQueryById("start-btn", "game-screen");
 instructionBtn.addEventListener("click", () => {
     switchScreen("instruction-screen");
+});
+menuBtn.addEventListener("click", () => {
+    switchScreen("menu-screen");
 });
 function buttonQuery(btnClassName, screen) {
     document.addEventListener("DOMContentLoaded", () => {
