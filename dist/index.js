@@ -62,6 +62,7 @@ switchScreen("starting-screen");
 // })
 switchScreenBtn("start-btn", "game-screen");
 switchScreenBtn("instruction-btn", "instruction-screen");
+switchScreenBtn("music-btn", "music-screen");
 // instructionBtn.addEventListener("click", ()=> { 
 //   switchScreen("instruction-screen");
 // })
@@ -89,6 +90,50 @@ function buttonQuery(btnClassName, screen) {
 ;
 buttonQuery("home-btn", "starting-screen");
 buttonQuery("game-btn", "game-screen");
+//music 
+const player = new Audio("medias/Baby-Tiger.mp3"); // Ensure this path is correct
+const volumeSlider = document.getElementById("music-control");
+const volumeDisplay = document.getElementById("volume-display"); // Optional
+const playPauseButton = document.getElementById("play");
+if (!player || !volumeSlider || !playPauseButton) {
+    console.error("One or more elements not found.");
+}
+player.play();
+playPauseButton.addEventListener("click", () => {
+    if (!player.paused) {
+        player.pause();
+        playPauseButton.textContent = "Play";
+    }
+    else {
+        player.play();
+        playPauseButton.textContent = "Pause";
+    }
+});
+// Optional: Add event listener for volume slider
+if (volumeSlider) {
+    volumeSlider.addEventListener("change", (event) => {
+        const target = event.target;
+        player.volume = target.valueAsNumber / 10; // Assuming the slider goes from 0 to 100
+        if (volumeDisplay) {
+            volumeDisplay.textContent = `${(target.valueAsNumber / 100 * 100)}`; // Display volume as percentage
+        }
+    });
+}
+// document.addEventListener('DOMContentLoaded', function() {
+//   let audio = new Audio("medias/Baby-tiger.mp3"); // Ensure this path is correct
+//   let volumeControl = document.querySelector("#music-control") as HTMLElement;
+//   if(volumeControl) {
+//       volumeControl.addEventListener("change", function(e) {
+//           // Map the slider value (0-10) to volume (0.0 - 1.0)
+//           const target = e.target as HTMLInputElement;
+//           // Now TypeScript knows target.value is safe to use
+//           audio.volume = target.valueAsNumber / 10; // Use valueAsNumber for numeric inputs
+//           audio.play();
+//       });
+//   } else {
+//       console.error("Volume control element not found.");
+//   }
+// });
 //set up game parameters 
 let level, pew, roids, score, text, textAlpha;
 // newGame();  

@@ -35,7 +35,8 @@ main {
 #starting-screen,
 #instruction-screen,
 #gameover-screen,
-#menu-screen {
+#menu-screen,
+#music-screen {
   background-image: url("medias/cheesy_bg.jpg");
   background-position: center;
   background-repeat: no-repeat;
