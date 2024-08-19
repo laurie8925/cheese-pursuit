@@ -69,6 +69,14 @@ switchScreenBtn("music-btn", "music-screen");
 menuBtn.addEventListener("click", () => {
     switchScreen("menu-screen");
 });
+// document.body.addEventListener('keydown', function(e: KeyboardEvent) {
+//   if (e.key === "Escape") {
+//     const menu = document.getElementById("menu-screen") as HTMLElement; 
+//     if (menu) { 
+//       switchScreen("menu-screen");
+//     }
+//   }
+// });
 //for class buttons 
 function buttonQuery(btnClassName, screen) {
     document.addEventListener("DOMContentLoaded", () => {
