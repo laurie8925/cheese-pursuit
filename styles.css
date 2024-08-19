@@ -80,7 +80,8 @@ main {
   align-content: flex-end;
   justify-content: space-evenly;
   align-items: center;
-  #play {
+  #play,
+  #pause {
     width: fit-content;
     padding: none;
     border-radius: none;
