@@ -230,6 +230,8 @@ function newGame() {
             gameOver();
         }
     }, 500); //check game very second
+    clicked = false;
+    asteroidDebris = [];
     timer = new Timer(10);
     level = 1;
     pew = newPew();
