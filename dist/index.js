@@ -44,6 +44,8 @@ const volumeSlider = document.getElementById("music-control");
 const volumeDisplay = document.getElementById("volume-display");
 const volumeSvg = document.getElementById("volume-svg");
 const playPauseButton = document.getElementById("play");
+// let currentScreen:string = "starting-screen"; 
+let gameActive = false;
 //set up game variables 
 let level;
 let pew;
@@ -145,16 +147,19 @@ function switchScreen(screenId) {
     });
     const element = document.getElementById(screenId);
     element.classList.remove("hidden");
+    // currentScreen = screenId;
+    // console.log(currentScreen); 
 }
 //handle escape menu screen
 function menuScreen() {
     let isEscPressed = false;
-    // Assuming timer and resumeBtn are already defined in your script
-    // For example:
-    // let timer = new Timer(initialValue);
-    // let resumeBtn = document.getElementById('resume-btn');
+    // if (currentScreen !== "game-screen"){ 
+    //   console.log("not gaming screen")
+    //   return;
+    // }
+    // console.log(" gaming screen")
     document.body.addEventListener("keydown", function (e) {
-        if (e.key === "Escape") {
+        if (e.key === "Escape" && gameActive) {
             if (!isEscPressed) {
                 switchScreen("menu-screen");
                 timer.pause();
@@ -163,18 +168,22 @@ function menuScreen() {
                 switchScreen("game-screen");
                 timer.resume();
             }
-            isEscPressed = !isEscPressed; // Toggle the state
+            isEscPressed = !isEscPressed;
         }
     });
-    // Attach the resume button event listener outside the keydown event listener
+    //resume button event listener outside the keydown event listener
     resumeBtn.addEventListener("click", () => {
         switchScreen("game-screen");
         timer.resume();
-        isEscPressed = !isEscPressed; // Toggle the state when the resume button is clicked
+        isEscPressed = !isEscPressed; // change state when the resume button is clicked
     });
 }
 ;
 menuScreen();
+// if (currentScreen === "game-screen" || currentScreen === "menu-screen"){ 
+// } 
+// setInterval(menuScreen,500);
+// console.log(currentScreen)
 //for class buttons 
 function buttonQuery(btnClassName, screen) {
     document.addEventListener("DOMContentLoaded", () => {
@@ -193,6 +202,7 @@ function buttonQuery(btnClassName, screen) {
                     clearInterval(gameLoop);
                     clearInterval(checkGameId);
                     pew.dead = true;
+                    gameActive = false;
                 }
                 // Switch to the starting screen
                 switchScreen(screen);
@@ -403,6 +413,7 @@ function newAsteroid(x, y, r) {
     return roid;
 }
 function newGame() {
+    gameActive = true;
     clearInterval(gameLoop);
     clearInterval(checkGameId);
     //check here after timer.timer is declared
@@ -428,6 +439,7 @@ function newLevel() {
     timer.reset(); //new timer
 }
 function winGame() {
+    gameActive = !gameActive;
     switchScreen("winning-screen");
     // text = "You Beat the Game! Congradulation!!!!"
     clearInterval(checkGameId);
@@ -436,6 +448,7 @@ function winGame() {
     // textAlpha = 1; 
 }
 function gameOver() {
+    gameActive = !gameActive;
     console.log("Entering gameOver"); // Debug statement
     switchScreen("gameover-screen");
     console.log("Before clearing intervals, checkGameId:", checkGameId); // Debug statement
