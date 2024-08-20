@@ -68,7 +68,9 @@ class Timer {
         this.initial = initial;
         this.isPaused = false;
         this.remainingTime = 0;
+        this.startTime = 0;
         this.counter = initial;
+        this.startTime = Date.now();
         this.intervalid = setInterval(() => {
             if (!this.isPaused) {
                 this.counter--;
@@ -91,10 +93,12 @@ class Timer {
     }
     resume() {
         this.isPaused = false;
+        const elapsedTime = Date.now() - this.startTime; // Calculate elapsed time during pause
+        const adjustedCounter = this.initial - Math.floor(elapsedTime / 1000); // Adjust counter based on elapsed time
+        this.counter = Math.max(adjustedCounter, 0); // Ensure counter doesn't go negative
         this.intervalid = setInterval(() => {
             if (!this.isPaused) {
                 this.counter--;
-                // console.log(`Countdown: ${this.counter}`);
                 if (this.counter === 0) {
                     clearInterval(this.intervalid);
                     this.intervalid = undefined;
@@ -107,6 +111,10 @@ class Timer {
         this.counter = this.initial;
         this.resume();
     }
+    clear() {
+        this.intervalid = undefined;
+        clearInterval(this.intervalid);
+    }
 }
 //event listener 
 //id button to swtich screen
@@ -117,9 +125,6 @@ function switchScreenBtn(buttonId, screenId) {
         if (screenId === "game-screen") {
             newGame();
         }
-        else if (screenId === "game-screen") {
-            timer.resume();
-        }
     });
 }
 ;
@@ -127,10 +132,8 @@ switchScreen("starting-screen");
 switchScreenBtn("start-btn", "game-screen");
 switchScreenBtn("instruction-btn", "instruction-screen");
 switchScreenBtn("music-btn", "music-screen");
-switchScreenBtn("resume-btn", "game-screen");
 // resumeBtn.addEventListener("click", ()=> { 
-//   switchScreen("game-screen");
-//   timer.resume(); 
+// switchScreen("game-screen");
 // })
 menuBtn.addEventListener("click", () => {
     switchScreen("menu-screen");
@@ -140,13 +143,16 @@ function switchScreen(screenId) {
     document.querySelectorAll(".screen").forEach(function (screen) {
         screen.classList.add("hidden");
     });
-    // show the selected screen
     const element = document.getElementById(screenId);
-    // Now you can safely access classList
     element.classList.remove("hidden");
 }
+//handle escape menu screen
 function menuScreen() {
     let isEscPressed = false;
+    // Assuming timer and resumeBtn are already defined in your script
+    // For example:
+    // let timer = new Timer(initialValue);
+    // let resumeBtn = document.getElementById('resume-btn');
     document.body.addEventListener("keydown", function (e) {
         if (e.key === "Escape") {
             if (!isEscPressed) {
@@ -159,6 +165,12 @@ function menuScreen() {
             }
             isEscPressed = !isEscPressed; // Toggle the state
         }
+    });
+    // Attach the resume button event listener outside the keydown event listener
+    resumeBtn.addEventListener("click", () => {
+        switchScreen("game-screen");
+        timer.resume();
+        isEscPressed = !isEscPressed; // Toggle the state when the resume button is clicked
     });
 }
 ;
@@ -181,7 +193,6 @@ function buttonQuery(btnClassName, screen) {
                     clearInterval(gameLoop);
                     clearInterval(checkGameId);
                     pew.dead = true;
-                    timer.pause();
                 }
                 // Switch to the starting screen
                 switchScreen(screen);
@@ -198,7 +209,7 @@ if (!player || !volumeSlider || !playPauseButton) {
 }
 player.pause();
 try {
-    player.play();
+    player.pause();
 }
 catch (error) {
     console.error('Playback failed:', error);
@@ -393,6 +404,7 @@ function newAsteroid(x, y, r) {
 }
 function newGame() {
     clearInterval(gameLoop);
+    clearInterval(checkGameId);
     //check here after timer.timer is declared
     checkGameId = setInterval(() => {
         if (timer.timer === 0 && asteroidDebris.length < 10) {
@@ -413,7 +425,7 @@ function newLevel() {
     level++; //increase level
     text = "Level " + level;
     textAlpha = 1;
-    timer = new Timer(10); //new timer
+    timer.reset(); //new timer
 }
 function winGame() {
     switchScreen("winning-screen");
@@ -424,13 +436,14 @@ function winGame() {
     // textAlpha = 1; 
 }
 function gameOver() {
+    console.log("Entering gameOver"); // Debug statement
     switchScreen("gameover-screen");
+    console.log("Before clearing intervals, checkGameId:", checkGameId); // Debug statement
     clearInterval(checkGameId);
     clearInterval(gameLoop);
-    // text = "Game Over :("
-    // textAlpha = 1; 
+    console.log("After clearing intervals, checkGameId:", checkGameId); // Debug statement
     pew.dead = true;
-    // ctx!.clearRect(0, 0, canv.width, canv.height);
+    console.log("clear end game");
 }
 function newPew() {
     return {
