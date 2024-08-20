@@ -32,13 +32,110 @@ const SHOW_CENTRE_DOT = false; //show or hide ship's center dot
 const TEXT_FADE = 2.5; // text fade time in seconds
 const TEXT_SIZE = 40; //text font height in pixels 
 let pewCollision = false;
-//get documents 
+//DOM documents elements
 const canv = document.getElementById("gameCanvas");
 const ctx = canv.getContext("2d");
 const startBtn = document.getElementById("start-btn");
 const instructionBtn = document.getElementById("instruction-btn");
 const menuBtn = document.getElementById("menu-btn");
-//set all screen hidden 
+const resumeBtn = document.getElementById("resume-btn");
+const player = new Audio("medias/Baby-Tiger.mp3"); // Ensure this path is correct
+const volumeSlider = document.getElementById("music-control");
+const volumeDisplay = document.getElementById("volume-display");
+const volumeSvg = document.getElementById("volume-svg");
+const playPauseButton = document.getElementById("play");
+//set up game variables 
+let level;
+let pew;
+let roids;
+let score;
+let text;
+let textAlpha;
+let asteroidDebris = [];
+let timer;
+let gameLoop;
+let checkGameId;
+let clicked = false;
+let clickedRectangle = null; //position of clicked rec (if x and y number else null)
+//images
+const mouse = new Image();
+mouse.src = "medias/mouse.png";
+const paw = new Image();
+paw.src = "medias/cat_paw_2.png";
+//class 
+class Timer {
+    constructor(initial) {
+        this.initial = initial;
+        this.isPaused = false;
+        this.remainingTime = 0;
+        this.counter = initial;
+        this.intervalid = setInterval(() => {
+            if (!this.isPaused) {
+                this.counter--;
+                if (this.counter === 0) {
+                    clearInterval(this.intervalid);
+                    this.intervalid = undefined;
+                }
+            }
+            // console.log(`Countdown: ${this.counter}`);
+        }, 1000);
+    }
+    get timer() {
+        return this.counter;
+    }
+    pause() {
+        this.isPaused = true;
+        this.remainingTime = this.counter;
+        clearInterval(this.intervalid);
+        this.intervalid = undefined;
+    }
+    resume() {
+        this.isPaused = false;
+        this.intervalid = setInterval(() => {
+            if (!this.isPaused) {
+                this.counter--;
+                // console.log(`Countdown: ${this.counter}`);
+                if (this.counter === 0) {
+                    clearInterval(this.intervalid);
+                    this.intervalid = undefined;
+                }
+            }
+        }, 1000);
+    }
+    reset() {
+        this.pause();
+        this.counter = this.initial;
+        this.resume();
+    }
+}
+//event listener 
+//id button to swtich screen
+function switchScreenBtn(buttonId, screenId) {
+    const button = document.getElementById(buttonId);
+    button.addEventListener("click", () => {
+        switchScreen(screenId);
+        if (screenId === "game-screen") {
+            newGame();
+        }
+        else if (screenId === "game-screen") {
+            timer.resume();
+        }
+    });
+}
+;
+switchScreen("starting-screen");
+switchScreenBtn("start-btn", "game-screen");
+switchScreenBtn("instruction-btn", "instruction-screen");
+switchScreenBtn("music-btn", "music-screen");
+switchScreenBtn("resume-btn", "game-screen");
+// resumeBtn.addEventListener("click", ()=> { 
+//   switchScreen("game-screen");
+//   timer.resume(); 
+// })
+menuBtn.addEventListener("click", () => {
+    switchScreen("menu-screen");
+});
+//switch screen management 
 function switchScreen(screenId) {
     document.querySelectorAll(".screen").forEach(function (screen) {
         screen.classList.add("hidden");
@@ -48,43 +145,24 @@ function switchScreen(screenId) {
     // Now you can safely access classList
     element.classList.remove("hidden");
 }
-//for id buttons for swtiching screens
-function switchScreenBtn(buttonId, screenId) {
-    const button = document.getElementById(buttonId);
-    button.addEventListener("click", () => {
-        switchScreen(screenId);
-        if (screenId === "game-screen") {
-            newGame();
-        }
-    });
-}
-;
-switchScreen("starting-screen");
-switchScreenBtn("start-btn", "game-screen");
-switchScreenBtn("instruction-btn", "instruction-screen");
-switchScreenBtn("music-btn", "music-screen");
-menuBtn.addEventListener("click", () => {
-    switchScreen("menu-screen");
-});
 function menuScreen() {
     let isEscPressed = false;
     document.body.addEventListener("keydown", function (e) {
         if (e.key === "Escape") {
             if (!isEscPressed) {
                 switchScreen("menu-screen");
-                console.log("pause at " + timer.timer);
                 timer.pause();
             }
             else {
                 switchScreen("game-screen");
                 timer.resume();
-                console.log("Starting " + timer.timer);
             }
             isEscPressed = !isEscPressed; // Toggle the state
         }
     });
 }
 ;
+menuScreen();
 //for class buttons 
 function buttonQuery(btnClassName, screen) {
     document.addEventListener("DOMContentLoaded", () => {
@@ -103,6 +181,7 @@ function buttonQuery(btnClassName, screen) {
                     clearInterval(gameLoop);
                     clearInterval(checkGameId);
                     pew.dead = true;
+                    timer.pause();
                 }
                 // Switch to the starting screen
                 switchScreen(screen);
@@ -114,15 +193,10 @@ function buttonQuery(btnClassName, screen) {
 buttonQuery("home-btn", "starting-screen");
 buttonQuery("game-btn", "game-screen");
 //music 
-const player = new Audio("medias/Baby-Tiger.mp3"); // Ensure this path is correct
-const volumeSlider = document.getElementById("music-control");
-const volumeDisplay = document.getElementById("volume-display");
-const volumeSvg = document.getElementById("volume-svg");
-const playPauseButton = document.getElementById("play");
-// const pauseButton = document.getElementById("pause") as HTMLInputElement;
 if (!player || !volumeSlider || !playPauseButton) {
     console.error("One or more elements not found.");
 }
+player.pause();
 try {
     player.play();
 }
@@ -194,19 +268,11 @@ if (volumeSlider) {
     volumeSlider.addEventListener("change", updateVolume);
     setInterval(updateVolume, 100);
 }
-//set up game parameters 
-let level, pew, roids, score, text, textAlpha;
-// newGame();  
-const mouse = new Image();
-mouse.src = "medias/mouse.png";
-const paw = new Image();
-paw.src = "medias/cat_paw_2.png";
+//pew object
+// let pew = newPew(); 
 //set up asteriod object 
 // let roids: Asteroid[] = []; 
 // createAsteroidBelt(); 
-let asteroidDebris = [];
-let clicked = false;
-let clickedRectangle = null; //position of clicked rec (if x and y number else null)
 canv.addEventListener("click", handleCanvasClick);
 function handleCanvasClick(ev) {
     if (pew.dead) {
@@ -221,53 +287,6 @@ function handleCanvasClick(ev) {
     // Update the rectangle position if another click is made
     clickedRectangle = { x: rectX - pew.w / 2, y: rectY - pew.h / 2, r: pew.r };
 }
-let counter;
-class Timer {
-    constructor(initial) {
-        this.initial = initial;
-        this.isPaused = false;
-        this.remainingTime = 0;
-        this.counter = initial;
-        this.intervalid = setInterval(() => {
-            if (!this.isPaused) {
-                this.counter--;
-                if (this.counter === 0) {
-                    clearInterval(this.intervalid);
-                    this.intervalid = undefined;
-                }
-            }
-            // console.log(`Countdown: ${this.counter}`);
-        }, 1000);
-    }
-    get timer() {
-        return this.counter;
-    }
-    pause() {
-        this.isPaused = true;
-        this.remainingTime = this.counter;
-        clearInterval(this.intervalid);
-        this.intervalid = undefined;
-    }
-    resume() {
-        this.isPaused = false;
-        this.intervalid = setInterval(() => {
-            if (!this.isPaused) {
-                this.counter--;
-                // console.log(`Countdown: ${this.counter}`);
-                if (this.counter === 0) {
-                    clearInterval(this.intervalid);
-                    this.intervalid = undefined;
-                }
-            }
-        }, 1000);
-    }
-    reset() {
-        this.pause();
-        this.counter = this.initial;
-        this.resume();
-    }
-}
-let timer;
 //check timer and destoryed mouse number for game over
 // function checkGame() { 
 //   if (timer.timer === 0 && asteroidDebris.length < 10){ 
@@ -372,13 +391,10 @@ function newAsteroid(x, y, r) {
     // }
     return roid;
 }
-let checkGameId;
-let gameLoop;
 function newGame() {
     clearInterval(gameLoop);
     //check here after timer.timer is declared
     checkGameId = setInterval(() => {
-        console.log(timer.timer);
         if (timer.timer === 0 && asteroidDebris.length < 10) {
             gameOver();
         }
@@ -391,7 +407,6 @@ function newGame() {
     score = 0;
     createAsteroidBelt();
     gameLoop = setInterval(base, 1000 / FPS);
-    menuScreen();
 }
 function newLevel() {
     asteroidDebris = []; //empty score
