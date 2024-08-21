@@ -137,9 +137,9 @@ switchScreenBtn("music-btn", "music-screen");
 // resumeBtn.addEventListener("click", ()=> { 
 // switchScreen("game-screen");
 // })
-menuBtn.addEventListener("click", () => {
-    switchScreen("menu-screen");
-});
+// menuBtn.addEventListener("click", ()=> { 
+//   switchScreen("menu-screen");
+// })
 //switch screen management 
 function switchScreen(screenId) {
     document.querySelectorAll(".screen").forEach(function (screen) {

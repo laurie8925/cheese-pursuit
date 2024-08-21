@@ -17,7 +17,7 @@
           <h1>Cheese Purrsuit</h1>
           <button id="start-btn" class="game-btn">Start</button>
           <button id="instruction-btn">How to play</button>
-          <button id="menu-btn">Menu</button>
+          <!-- <button id="menu-btn">Menu</button> -->
           <button id="music-btn">Music</button>
           <button id="credit-btn">Credits</button>
         </div>
@@ -144,7 +144,7 @@
             <button id="play">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="icon icon-tabler icon-tabler-volume"
+                class="icon icon-tabler icon-tabler-player-play-filled"
                 width="44"
                 height="44"
                 viewBox="0 0 24 24"
@@ -155,13 +155,14 @@
                 stroke-linejoin="round"
               >
                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                <path d="M15 8a5 5 0 0 1 0 8" />
-                <path d="M17.7 5a9 9 0 0 1 0 14" />
                 <path
-                  d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5"
+                  d="M6 4v16a1 1 0 0 0 1.524 .852l13 -8a1 1 0 0 0 0 -1.704l-13 -8a1 1 0 0 0 -1.524 .852z"
+                  stroke-width="0"
+                  fill="#ffcd28"
                 />
               </svg>
             </button>
+
             <input
               type="range"
               id="music-control"
@@ -169,7 +170,11 @@
               max="10"
               value="10"
             />
+
             <p id="volume-display">10</p>
+            <div id="volume-svg">
+              <!-- placeholder for svg -->
+            </div>
           </div>
           <button id="resume-btn">Resume</button>
           <button class="game-btn">Restart</button>
