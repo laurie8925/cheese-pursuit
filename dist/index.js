@@ -236,22 +236,24 @@ catch (error) {
 }
 playPauseButtons.forEach((playPauseButton) => {
     const playSvg = `
-      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-player-pause-filled" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffcd28" fill="none" stroke-linecap="round" stroke-linejoin="round">
-          <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-          <path d="M9 4h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h2a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2z" stroke-width="0" fill="#ffcd28" />
-          <path d="M17 4h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h2a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2z" stroke-width="0" fill="#ffcd28" />
-      </svg>`;
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-player-pause-filled" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffcd28" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+        <path d="M9 4h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h2a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2z" stroke-width="0" fill="#ffcd28" />
+        <path d="M17 4h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h2a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2z" stroke-width="0" fill="#ffcd28" />
+    </svg>`;
     const pauseSvg = `
-      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-player-play-filled" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffcd28" fill="none" stroke-linecap="round" stroke-linejoin="round">
-          <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-          <path d="M6 4v16a1 1 0 0 0 1.524 .852l13 -8a1 1 0 0 0 0 -1.704l-13 -8a1 1 0 0 0 -1.524 .852z" stroke-width="0" fill="#ffcd28" />
-      </svg>`;
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-player-play-filled" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffcd28" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+        <path d="M6 4v16a1 1 0 0 0 1.524 .852l13 -8a1 1 0 0 0 0 -1.704l-13 -8a1 1 0 0 0 -1.524 .852z" stroke-width="0" fill="#ffcd28" />
+    </svg>`;
+    //handle default svg
     if (player.paused) {
         playPauseButton.innerHTML = pauseSvg;
     }
     else {
         playPauseButton.innerHTML = playSvg;
     }
+    //handle click events
     playPauseButton.addEventListener("click", () => {
         if (player.paused) {
             //shows pause button when music plays
@@ -275,33 +277,6 @@ if (volumeSliders) {
                 volumeDisplay.textContent = `${(currentVolume)}`;
             });
             volumeSlider.value = volume.toString();
-            // volumeSvgs.forEach(volumeSvg=>{ 
-            //   if(currentVolume === 0){ 
-            //     console.log("mute")
-            //   volumeSvg.innerHTML = `
-            //   <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-volume-3" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffcd28" fill="none" stroke-linecap="round" stroke-linejoin="round">
-            //       <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-            //       <path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5" />
-            //       <path d="M16 10l4 4m0 -4l-4 4" />
-            //   </svg>`;
-            // } else if (currentVolume > 0 && currentVolume <= 5) { 
-            //   console.log("little volume")
-            //   volumeSvg.innerHTML = `
-            //     <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-volume-2" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffcd28" fill="none" stroke-linecap="round" stroke-linejoin="round">
-            //         <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-            //         <path d="M15 8a5 5 0 0 1 0 8" />
-            //         <path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5" />
-            //     </svg>`;
-            // } else { 
-            //   volumeSvg.innerHTML = `
-            //     <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-volume" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffcd28" fill="none" stroke-linecap="round" stroke-linejoin="round">
-            //       <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-            //       <path d="M15 8a5 5 0 0 1 0 8" />
-            //       <path d="M17.7 5a9 9 0 0 1 0 14" />
-            //       <path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5" />
-            //     </svg>`;
-            // }
-            // })
         }
         // volumeSlider.addEventListener("change", (event) => {
         //     const target = event.target as HTMLInputElement;
@@ -346,7 +321,7 @@ if (volumeSliders) {
             });
         }
         volumeSliders.forEach(control => {
-            control.addEventListener('change', handleVolumeChange);
+            control.addEventListener('input', handleVolumeChange);
         });
         // volumeSliders.forEach(control => { 
         //   control.addEventListener("change", (event:Event) =>{ 
