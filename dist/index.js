@@ -229,31 +229,39 @@ if (!player || !volumeSliders || !playPauseButtons) {
 }
 player.pause();
 try {
-    player.pause();
+    player.play();
 }
 catch (error) {
     console.error('Playback failed:', error);
 }
 playPauseButtons.forEach((playPauseButton) => {
-    playPauseButton.addEventListener("click", () => {
-        if (player.paused) {
-            //shows pause button when music plays
-            player.play();
-            playPauseButton.innerHTML = `
+    const playSvg = `
       <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-player-pause-filled" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffcd28" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
           <path d="M9 4h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h2a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2z" stroke-width="0" fill="#ffcd28" />
           <path d="M17 4h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h2a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2z" stroke-width="0" fill="#ffcd28" />
-      </svg>`; //pause button svg
+      </svg>`;
+    const pauseSvg = `
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-player-play-filled" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffcd28" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+          <path d="M6 4v16a1 1 0 0 0 1.524 .852l13 -8a1 1 0 0 0 0 -1.704l-13 -8a1 1 0 0 0 -1.524 .852z" stroke-width="0" fill="#ffcd28" />
+      </svg>`;
+    if (player.paused) {
+        playPauseButton.innerHTML = pauseSvg;
+    }
+    else {
+        playPauseButton.innerHTML = playSvg;
+    }
+    playPauseButton.addEventListener("click", () => {
+        if (player.paused) {
+            //shows pause button when music plays
+            player.play();
+            playPauseButton.innerHTML = playSvg; //pause button svg
         }
         else {
             //shows play button when music is paused
             player.pause();
-            playPauseButton.innerHTML = `
-      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-player-play-filled" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffcd28" fill="none" stroke-linecap="round" stroke-linejoin="round">
-          <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-          <path d="M6 4v16a1 1 0 0 0 1.524 .852l13 -8a1 1 0 0 0 0 -1.704l-13 -8a1 1 0 0 0 -1.524 .852z" stroke-width="0" fill="#ffcd28" />
-      </svg>`; //play button svg
+            playPauseButton.innerHTML = pauseSvg; //play button svg
         }
     });
 });
@@ -267,7 +275,6 @@ if (volumeSliders) {
                 volumeDisplay.textContent = `${(currentVolume)}`;
             });
             volumeSlider.value = volume.toString();
-            console.log(currentVolume);
             // volumeSvgs.forEach(volumeSvg=>{ 
             //   if(currentVolume === 0){ 
             //     console.log("mute")
