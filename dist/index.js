@@ -163,22 +163,6 @@ function buttonQuery(btnClassName, screen) {
 ;
 buttonQuery("home-btn", "starting-screen");
 buttonQuery("game-btn", "game-screen");
-// function classElement (classname: string, htmlType: string){
-//   let buttons = document.getElementsByClassName(classname); 
-//   for (let i = 0; i < buttons.length; i++) {
-//     if (htmlType === "input"){ 
-//       const button = buttons[i] as HTMLInputElement;
-//     } else { 
-//       const button = buttons[i] as HTMLElement;
-//     }
-//   } 
-// }
-// resumeBtn.addEventListener("click", ()=> { 
-// switchScreen("game-screen");
-// })
-// menuBtn.addEventListener("click", ()=> { 
-//   switchScreen("menu-screen");
-// })
 //switch screen management 
 function switchScreen(screenId) {
     document.querySelectorAll(".screen").forEach(function (screen) {
@@ -192,11 +176,6 @@ function switchScreen(screenId) {
 //handle escape menu screen
 function menuScreen() {
     let isEscPressed = false;
-    // if (currentScreen !== "game-screen"){ 
-    //   console.log("not gaming screen")
-    //   return;
-    // }
-    // console.log(" gaming screen")
     document.body.addEventListener("keydown", function (e) {
         if (e.key === "Escape" && gameActive) {
             if (!isEscPressed) {
@@ -219,10 +198,6 @@ function menuScreen() {
 }
 ;
 menuScreen();
-// if (currentScreen === "game-screen" || currentScreen === "menu-screen"){ 
-// } 
-// setInterval(menuScreen,500);
-// console.log(currentScreen)
 //music 
 if (!player || !volumeSliders || !playPauseButtons) {
     console.error("One or more elements not found.");
@@ -267,56 +242,54 @@ playPauseButtons.forEach((playPauseButton) => {
         }
     });
 });
-// Optional: Add event listener for volume slider
-if (volumeSliders) {
-    volumeSliders.forEach((volumeSlider) => {
-        function updateVolume(volume) {
-            const currentVolume = volumeSlider.valueAsNumber;
-            player.volume = currentVolume / 10;
-            volumeDisplays.forEach((volumeDisplay) => {
-                volumeDisplay.textContent = `${(currentVolume)}`;
-            });
-            volumeSlider.value = volume.toString();
-        } //end of updatevolume function 
-        function handleVolumeChange(event) {
-            const target = event.target;
-            const newValue = parseFloat(target.value);
-            updateVolume(newValue);
-            volumeSvgs.forEach(volumeSvg => {
-                if (newValue === 0) {
-                    volumeSvg.innerHTML = `
-          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-volume-3" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffcd28" fill="none" stroke-linecap="round" stroke-linejoin="round">
-              <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-              <path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5" />
-              <path d="M16 10l4 4m0 -4l-4 4" />
-          </svg>`;
-                }
-                else if (newValue > 0 && newValue <= 5) {
-                    volumeSvg.innerHTML = `
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-volume-2" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffcd28" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                <path d="M15 8a5 5 0 0 1 0 8" />
-                <path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5" />
-            </svg>`;
-                }
-                else {
-                    volumeSvg.innerHTML = `
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-volume" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffcd28" fill="none" stroke-linecap="round" stroke-linejoin="round">
+//event listener for volume slider
+volumeSliders.forEach((volumeSlider) => {
+    function updateVolume(volume) {
+        const currentVolume = volumeSlider.valueAsNumber;
+        player.volume = currentVolume / 10;
+        volumeDisplays.forEach((volumeDisplay) => {
+            volumeDisplay.textContent = `${(currentVolume)}`;
+        });
+        volumeSlider.value = volume.toString();
+    } //end of updatevolume function 
+    function handleVolumeChange(event) {
+        const target = event.target;
+        const newValue = parseFloat(target.value);
+        updateVolume(newValue);
+        volumeSvgs.forEach(volumeSvg => {
+            if (newValue === 0) {
+                volumeSvg.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-volume-3" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffcd28" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5" />
+            <path d="M16 10l4 4m0 -4l-4 4" />
+        </svg>`;
+            }
+            else if (newValue > 0 && newValue <= 5) {
+                volumeSvg.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-volume-2" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffcd28" fill="none" stroke-linecap="round" stroke-linejoin="round">
               <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
               <path d="M15 8a5 5 0 0 1 0 8" />
-              <path d="M17.7 5a9 9 0 0 1 0 14" />
               <path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5" />
-            </svg>`;
-                }
-                ;
-            }); //end of svg control 
-        }
-        volumeSliders.forEach(control => {
-            control.addEventListener('input', handleVolumeChange);
-        });
-        setInterval(updateVolume, 100);
+          </svg>`;
+            }
+            else {
+                volumeSvg.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-volume" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffcd28" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <path d="M15 8a5 5 0 0 1 0 8" />
+            <path d="M17.7 5a9 9 0 0 1 0 14" />
+            <path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5" />
+          </svg>`;
+            }
+            ;
+        }); //end of svg control 
+    }
+    volumeSliders.forEach(control => {
+        control.addEventListener('input', handleVolumeChange);
     });
-}
+    setInterval(updateVolume, 100);
+}); //end of volume slider 
 canv.addEventListener("click", handleCanvasClick);
 function handleCanvasClick(ev) {
     if (pew.dead) {
@@ -331,14 +304,6 @@ function handleCanvasClick(ev) {
     // Update the rectangle position if another click is made
     clickedRectangle = { x: rectX - pew.w / 2, y: rectY - pew.h / 2, r: pew.r };
 }
-//check timer and destoryed mouse number for game over
-// function checkGame() { 
-//   if (timer.timer === 0 && asteroidDebris.length < 10){ 
-//     gameOver();
-//   }
-//   return;
-// }
-// setInterval(checkGame, 1000); //check game very second
 function createAsteroidBelt() {
     roids = [];
     let x, y;
@@ -429,10 +394,6 @@ function newAsteroid(x, y, r) {
         offs: [],
         rotation: 0,
     };
-    //create the vertex offset array 
-    // for (var i = 0; i < roid.vert; i++){ 
-    //   roid.offs.push(Math.random() * ROIDS_JAG *  2 + 1 - ROIDS_JAG); 
-    // }
     return roid;
 }
 function newGame() {
