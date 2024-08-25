@@ -227,7 +227,7 @@ menuScreen();
 if (!player || !volumeSliders || !playPauseButtons) {
     console.error("One or more elements not found.");
 }
-player.pause();
+player.loop = true;
 try {
     player.play();
 }
@@ -277,66 +277,46 @@ if (volumeSliders) {
                 volumeDisplay.textContent = `${(currentVolume)}`;
             });
             volumeSlider.value = volume.toString();
-        }
-        // volumeSlider.addEventListener("change", (event) => {
-        //     const target = event.target as HTMLInputElement;
-        //     player.volume = target.valueAsNumber / 10; 
-        //     if (volumeDisplay) {
-        //         volumeDisplay.textContent = `${(target.valueAsNumber)}`; // display volume as percentage
-        //     }
-        // });
-        // volumeSlider.addEventListener("change", updateVolume);
+        } //end of updatevolume function 
         function handleVolumeChange(event) {
             const target = event.target;
             const newValue = parseFloat(target.value);
             updateVolume(newValue);
             volumeSvgs.forEach(volumeSvg => {
                 if (newValue === 0) {
-                    console.log("mute");
                     volumeSvg.innerHTML = `
-        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-volume-3" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffcd28" fill="none" stroke-linecap="round" stroke-linejoin="round">
-            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-            <path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5" />
-            <path d="M16 10l4 4m0 -4l-4 4" />
-        </svg>`;
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-volume-3" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffcd28" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+              <path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5" />
+              <path d="M16 10l4 4m0 -4l-4 4" />
+          </svg>`;
                 }
                 else if (newValue > 0 && newValue <= 5) {
-                    console.log("little volume");
                     volumeSvg.innerHTML = `
-          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-volume-2" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffcd28" fill="none" stroke-linecap="round" stroke-linejoin="round">
-              <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-              <path d="M15 8a5 5 0 0 1 0 8" />
-              <path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5" />
-          </svg>`;
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-volume-2" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffcd28" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M15 8a5 5 0 0 1 0 8" />
+                <path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5" />
+            </svg>`;
                 }
                 else {
                     volumeSvg.innerHTML = `
-          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-volume" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffcd28" fill="none" stroke-linecap="round" stroke-linejoin="round">
-            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-            <path d="M15 8a5 5 0 0 1 0 8" />
-            <path d="M17.7 5a9 9 0 0 1 0 14" />
-            <path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5" />
-          </svg>`;
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-volume" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffcd28" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+              <path d="M15 8a5 5 0 0 1 0 8" />
+              <path d="M17.7 5a9 9 0 0 1 0 14" />
+              <path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5" />
+            </svg>`;
                 }
-            });
+                ;
+            }); //end of svg control 
         }
         volumeSliders.forEach(control => {
             control.addEventListener('input', handleVolumeChange);
         });
-        // volumeSliders.forEach(control => { 
-        //   control.addEventListener("change", (event:Event) =>{ 
-        //     const target = event.target as HTMLInputElement; 
-        //     updateVolume(parseFloat(target.value))
-        //   })
-        // })
         setInterval(updateVolume, 100);
     });
 }
-//pew object
-// let pew = newPew(); 
-//set up asteriod object 
-// let roids: Asteroid[] = []; 
-// createAsteroidBelt(); 
 canv.addEventListener("click", handleCanvasClick);
 function handleCanvasClick(ev) {
     if (pew.dead) {
@@ -479,7 +459,7 @@ function newLevel() {
     level++; //increase level
     text = "Level " + level;
     textAlpha = 1;
-    timer.reset(); //new timer
+    timer = new Timer(10);
 }
 function winGame() {
     gameActive = !gameActive;
@@ -567,7 +547,7 @@ function base() {
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillStyle = "rgba(255, 205, 40, " + textAlpha + ")";
-        ctx.font = "small-caps " + TEXT_SIZE + "px Poppins";
+        ctx.font = "small-caps " + TEXT_SIZE + "px Josefin Sans";
         ctx.fillText(text, canv.width / 2, canv.height * 0.75);
         textAlpha -= (1.0 / TEXT_FADE / FPS);
     }
@@ -577,7 +557,7 @@ function base() {
     ctx.fillStyle = "rgba(255, 205, 40)";
     ctx.font = 30 + "px Poppins";
     const scoreTxt = "Score: " + score.toString(); //turn into string 
-    ctx.fillText(scoreTxt, canv.width - PEW_SIZE * 4.5, PEW_SIZE);
+    ctx.fillText(scoreTxt, canv.width - PEW_SIZE * 4.75, PEW_SIZE);
     //draw timer
     let lowTime = false;
     if (timer.timer <= 4) {
