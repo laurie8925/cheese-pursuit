@@ -67,6 +67,10 @@ main {
     background-color: rgb(255, 205, 40);
     font-family: "Poppins", Helvetica, sans-serif;
   }
+  p,
+  li {
+    font-size: 0.9rem;
+  }
   h3 {
     margin: 0.5rem;
     font-size: 30px;

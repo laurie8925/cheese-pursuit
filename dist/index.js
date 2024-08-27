@@ -226,7 +226,7 @@ playPauseButtons.forEach((playPauseButton) => {
     if (player.paused) {
         playPauseButton.innerHTML = pauseSvg;
     }
-    else {
+    else if (player.played) {
         playPauseButton.innerHTML = playSvg;
     }
     //handle click events
