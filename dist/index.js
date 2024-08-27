@@ -44,6 +44,7 @@ const volumeSliders = document.querySelectorAll(".music-control");
 const volumeDisplays = document.querySelectorAll(".volume-display");
 const volumeSvgs = document.querySelectorAll(".volume-svg");
 const playPauseButtons = document.querySelectorAll(".play");
+const mouseSound = new Audio("medias/mouse-squeak.m4a");
 // let currentScreen:string = "starting-screen"; 
 let gameActive = false;
 //set up game variables 
@@ -318,6 +319,7 @@ function createAsteroidBelt() {
 //check timer and destoryed mouse number for game over
 function destroyAsteroids(index) {
     const asteroid = roids[index];
+    mouseSound.play();
     asteroidDebris.push(asteroid);
     roids.splice(index, 1);
     //add one to score for destorying 
