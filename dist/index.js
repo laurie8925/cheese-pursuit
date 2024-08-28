@@ -256,6 +256,7 @@ volumeSliders.forEach((volumeSlider) => {
     function updateVolume(volume) {
         const currentVolume = volumeSlider.valueAsNumber;
         player.volume = currentVolume / 10;
+        mouseSound.volume = currentVolume / 10;
         volumeDisplays.forEach((volumeDisplay) => {
             volumeDisplay.textContent = `${(currentVolume)}`;
         });
@@ -312,6 +313,16 @@ function handleCanvasClick(ev) {
     clicked = true;
     // Update the rectangle position if another click is made
     clickedRectangle = { x: rectX - pew.w / 2, y: rectY - pew.h / 2, r: pew.r };
+    for (let i = 0; i < roids.length; i++) {
+        const { x: ax, y: ay, r: ar } = roids[i];
+        const { x: rx, y: ry, r: rr } = clickedRectangle;
+        if (clickedRectangle && distanceBtwPts(rx, ry, ax, ay) < rr + ar) {
+            //check distance btw cursor and mouse 
+            destroyAsteroids(i);
+            pewCollision = false;
+            break; // exit the loop as we have destroyed one asteroid
+        }
+    }
 }
 function createAsteroidBelt() {
     roids = [];
@@ -327,7 +338,11 @@ function createAsteroidBelt() {
 //check timer and destoryed mouse number for game over
 function destroyAsteroids(index) {
     const asteroid = roids[index];
+    mouseSound.load();
     mouseSound.play();
+    if (isEscPressed) {
+        mouseSound.pause();
+    }
     asteroidDebris.push(asteroid);
     roids.splice(index, 1);
     //add one to score for destorying 
@@ -380,7 +395,7 @@ function distanceBtwPts(x1, y1, x2, y2) {
     return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
 }
 function newAsteroid(x, y, r) {
-    let lvlMul = 1 + 0.3 * level;
+    let lvlMul = 1 + 0.2 * level;
     const centreX = canv.width / 2;
     const centreY = canv.height / 2;
     //calculate direction from asteroid to center 
@@ -470,14 +485,14 @@ function base() {
     ctx.strokeStyle = "white",
         ctx.lineWidth = PEW_SIZE / 20;
     // determine if the pew is colliding with any asteroids
-    if (clickedRectangle && !pew.dead) {
-        pewCollision = false;
-        for (let i = 0; i < roids.length; i++) {
-            if (distanceBtwPts(clickedRectangle.x, clickedRectangle.y, roids[i].x, roids[i].y) < clickedRectangle.r + roids[i].r) { //check if it's in collision with asteroids 
-                pewCollision = true;
-            }
-        }
-    }
+    // if (clickedRectangle && !pew.dead) {
+    //   pewCollision = false; 
+    //   for (let i = 0; i < roids.length; i++) {
+    //     if (distanceBtwPts(clickedRectangle.x, clickedRectangle.y, roids[i].x, roids[i].y) < clickedRectangle.r + roids[i].r) { //check if it's in collision with asteroids 
+    //       pewCollision = true;
+    //     }
+    //   }
+    // }
     // draw the clicked rectangle if it exists
     if (!clicked) {
         ctx.drawImage(paw, pew.x, pew.y, pew.w * 1.2, pew.h * 1.7);
@@ -500,16 +515,16 @@ function base() {
         if (pew.dead) {
             return;
         }
-        for (let i = 0; i < roids.length; i++) {
-            const { x: ax, y: ay, r: ar } = roids[i];
-            const { x: rx, y: ry, r: rr } = clickedRectangle;
-            if (clickedRectangle && distanceBtwPts(rx, ry, ax, ay) < rr + ar) {
-                //check distance btw cursor and mouse 
-                destroyAsteroids(i);
-                pewCollision = false;
-                break; // exit the loop as we have destroyed one asteroid
-            }
-        }
+        // for(let i = 0; i < roids.length; i++){
+        //   const {x:ax, y:ay, r:ar} = roids[i]; 
+        //   const {x:rx, y:ry, r:rr} = clickedRectangle; 
+        //   if (clickedRectangle && distanceBtwPts(rx, ry, ax, ay) < rr+ ar) { 
+        //     //check distance btw cursor and mouse 
+        //     destroyAsteroids(i);
+        //     pewCollision = false;
+        //     break; // exit the loop as we have destroyed one asteroid
+        //   }
+        // } 
     }
     //text ---------------------------------------------
     if (textAlpha >= 0) {
@@ -526,7 +541,7 @@ function base() {
     ctx.fillStyle = "rgba(255, 205, 40)";
     ctx.font = 30 + "px Poppins";
     const scoreTxt = "Score: " + score.toString(); //turn into string 
-    ctx.fillText(scoreTxt, canv.width - PEW_SIZE * 4.75, PEW_SIZE);
+    ctx.fillText(scoreTxt, canv.width - 30 * 4.75, 30);
     //draw timer
     let lowTime = false;
     if (timer.timer <= 4) {
@@ -540,7 +555,7 @@ function base() {
     if (timer.timer === 0) {
         timerTxt = "Timeout!";
     }
-    ctx.fillText(timerTxt, PEW_SIZE / 2, PEW_SIZE);
+    ctx.fillText(timerTxt, 15, 30);
     //draw asteroids --------------------------------------
     // let x, y, r, a, vert, offs; 
     for (let i = 0; i < roids.length; i++) {
