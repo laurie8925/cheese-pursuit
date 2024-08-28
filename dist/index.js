@@ -256,6 +256,7 @@ volumeSliders.forEach((volumeSlider) => {
     function updateVolume(volume) {
         const currentVolume = volumeSlider.valueAsNumber;
         player.volume = currentVolume / 10;
+        mouseSound.volume = currentVolume / 10;
         volumeDisplays.forEach((volumeDisplay) => {
             volumeDisplay.textContent = `${(currentVolume)}`;
         });
