@@ -67,13 +67,12 @@ const paw = new Image();
 paw.src = "medias/cat_paw_2.png";
 //class 
 class Timer {
-    constructor(initial) {
-        this.initial = initial;
-        this.isPaused = false;
-        this.remainingTime = 0;
-        this.startTime = 0;
-        this.counter = initial;
+    constructor(initialTime) {
+        this.initial = initialTime;
+        this.counter = initialTime;
         this.startTime = Date.now();
+        this.isPaused = false;
+        this.remainingTime = initialTime;
         this.intervalid = setInterval(() => {
             if (!this.isPaused) {
                 this.counter--;
@@ -82,7 +81,6 @@ class Timer {
                     this.intervalid = undefined;
                 }
             }
-            // console.log(`Countdown: ${this.counter}`);
         }, 1000);
     }
     get timer() {
@@ -96,9 +94,7 @@ class Timer {
     }
     resume() {
         this.isPaused = false;
-        const elapsedTime = Date.now() - this.startTime; // Calculate elapsed time during pause
-        const adjustedCounter = this.initial - Math.floor(elapsedTime / 1000); // Adjust counter based on elapsed time
-        this.counter = Math.max(adjustedCounter, 0); // Ensure counter doesn't go negative
+        this.counter = this.remainingTime;
         this.intervalid = setInterval(() => {
             if (!this.isPaused) {
                 this.counter--;
@@ -110,13 +106,24 @@ class Timer {
         }, 1000);
     }
     reset() {
-        this.pause();
         this.counter = this.initial;
-        this.resume();
-    }
-    clear() {
-        this.intervalid = undefined;
+        this.startTime = Date.now();
+        this.isPaused = false;
+        this.remainingTime = this.initial;
         clearInterval(this.intervalid);
+        this.intervalid = setInterval(() => {
+            if (!this.isPaused) {
+                this.counter--;
+                if (this.counter === 0) {
+                    clearInterval(this.intervalid);
+                    this.intervalid = undefined;
+                }
+            }
+        }, 1000);
+    }
+    stop() {
+        clearInterval(this.intervalid);
+        this.intervalid = undefined;
     }
 }
 //event listener 
@@ -174,9 +181,10 @@ function switchScreen(screenId) {
     // currentScreen = screenId;
     // console.log(currentScreen); 
 }
+let isEscPressed = false;
 //handle escape menu screen
 function menuScreen() {
-    let isEscPressed = false;
+    // let isEscPressed = false;
     document.body.addEventListener("keydown", function (e) {
         if (e.key === "Escape" && gameActive) {
             if (!isEscPressed) {
@@ -190,57 +198,57 @@ function menuScreen() {
             isEscPressed = !isEscPressed;
         }
     });
-    //resume button event listener outside the keydown event listener
+    const resumeBtn = document.getElementById("resume-btn");
     resumeBtn.addEventListener("click", () => {
         switchScreen("game-screen");
         timer.resume();
-        isEscPressed = !isEscPressed; // change state when the resume button is clicked
+        isEscPressed = !isEscPressed;
+        ;
     });
 }
-;
 menuScreen();
 //music 
 if (!player || !volumeSliders || !playPauseButtons) {
     console.error("One or more elements not found.");
 }
 player.loop = true;
-try {
-    player.play();
-}
-catch (error) {
-    console.error('Playback failed:', error);
-}
-playPauseButtons.forEach((playPauseButton) => {
-    const playSvg = `
+// try {
+//   player.play();
+// } catch (error) {
+//   console.error('Playback failed:', error);
+// }
+function upatePlayButtons() {
+    const pauseSvg = `
     <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-player-pause-filled" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffcd28" fill="none" stroke-linecap="round" stroke-linejoin="round">
         <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
         <path d="M9 4h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h2a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2z" stroke-width="0" fill="#ffcd28" />
         <path d="M17 4h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h2a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2z" stroke-width="0" fill="#ffcd28" />
     </svg>`;
-    const pauseSvg = `
+    const playSvg = `
     <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-player-play-filled" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffcd28" fill="none" stroke-linecap="round" stroke-linejoin="round">
         <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
         <path d="M6 4v16a1 1 0 0 0 1.524 .852l13 -8a1 1 0 0 0 0 -1.704l-13 -8a1 1 0 0 0 -1.524 .852z" stroke-width="0" fill="#ffcd28" />
     </svg>`;
-    //handle default svg
-    if (player.paused) {
-        playPauseButton.innerHTML = pauseSvg;
-    }
-    else if (player.played) {
-        playPauseButton.innerHTML = playSvg;
-    }
-    //handle click events
-    playPauseButton.addEventListener("click", () => {
-        if (player.paused) {
-            //shows pause button when music plays
-            player.play();
-            playPauseButton.innerHTML = playSvg; //pause button svg
+    playPauseButtons.forEach((playPauseButton) => {
+        if (!player.paused) {
+            playPauseButton.innerHTML = pauseSvg;
         }
         else {
-            //shows play button when music is paused
-            player.pause();
-            playPauseButton.innerHTML = pauseSvg; //play button svg
+            playPauseButton.innerHTML = playSvg;
         }
+    });
+}
+;
+upatePlayButtons(); //initial state 
+playPauseButtons.forEach((playPauseButton) => {
+    playPauseButton.addEventListener("click", () => {
+        if (!player.paused) {
+            player.pause();
+        }
+        else {
+            player.play();
+        }
+        upatePlayButtons(); // if clicked, update buttons 
     });
 });
 //event listener for volume slider
@@ -416,6 +424,8 @@ function newGame() {
     score = 0;
     createAsteroidBelt();
     gameLoop = setInterval(base, 1000 / FPS);
+    isEscPressed = false;
+    timer.reset();
 }
 function newLevel() {
     asteroidDebris = []; //empty score
@@ -435,14 +445,10 @@ function winGame() {
 }
 function gameOver() {
     gameActive = !gameActive;
-    console.log("Entering gameOver"); // Debug statement
     switchScreen("gameover-screen");
-    console.log("Before clearing intervals, checkGameId:", checkGameId); // Debug statement
     clearInterval(checkGameId);
     clearInterval(gameLoop);
-    console.log("After clearing intervals, checkGameId:", checkGameId); // Debug statement
     pew.dead = true;
-    console.log("clear end game");
 }
 function newPew() {
     return {
