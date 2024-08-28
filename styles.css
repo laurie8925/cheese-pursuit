@@ -9,6 +9,7 @@
 body {
   margin: 0;
   font-family: "Josefin Sans", sans-serif;
+  background-image: url("medias/body-bg-edit.jpg");
 }
 
 p,
