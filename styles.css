@@ -12,6 +12,13 @@ body {
   background-image: url("medias/body-bg-edit.jpg");
 }
 
+h3,
+h4,
+h5,
+p {
+  margin: 0;
+}
+
 p,
 ol,
 li,
