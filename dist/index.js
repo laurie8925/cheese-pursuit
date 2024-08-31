@@ -39,7 +39,9 @@ const startBtn = document.getElementById("start-btn");
 const instructionBtn = document.getElementById("instruction-btn");
 const menuBtn = document.getElementById("menu-btn");
 const resumeBtn = document.getElementById("resume-btn");
-const player = document.getElementById("player"); // Ensure this path is correct
+const finalScoreDisplay = document.getElementById("final-score");
+//music/sounds
+const player = document.getElementById("player");
 const volumeSliders = document.querySelectorAll(".music-control");
 const volumeDisplays = document.querySelectorAll(".volume-display");
 const volumeSvgs = document.querySelectorAll(".volume-svg");
@@ -52,6 +54,7 @@ let level;
 let pew;
 let roids;
 let score;
+let finalScore;
 let text;
 let textAlpha;
 let asteroidDebris = [];
@@ -464,6 +467,8 @@ function gameOver() {
     clearInterval(checkGameId);
     clearInterval(gameLoop);
     pew.dead = true;
+    finalScore = level * 100 + score * 10;
+    finalScoreDisplay.innerHTML = String(finalScore);
 }
 function newPew() {
     return {
