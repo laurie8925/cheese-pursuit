@@ -141,7 +141,7 @@ function switchScreenBtn(buttonId, screenId) {
     });
 }
 ;
-switchScreen("starting-screen");
+// switchScreen("starting-screen");
 switchScreenBtn("start-btn", "game-screen");
 switchScreenBtn("instruction-btn", "instruction-screen");
 switchScreenBtn("music-btn", "music-screen");
@@ -210,6 +210,22 @@ function menuScreen() {
     });
 }
 menuScreen();
+//
+// if screen smaller than 600/ 500 
+function checkScreenSize() {
+    switchScreen("starting-screen");
+    // document.querySelectorAll<HTMLElement>(".screen").forEach(function(screen) {
+    //   screen.style.height = (window.innerHeight * 0.6) + "px"; 
+    //   screen.style.width = (window.innerWidth *0.5) + "px"; 
+    // }); 
+    if (window.innerHeight <= 600 || window.innerWidth <= 500) {
+        console.log("Unfortunately, this game has only been developed for desktop at the moment. Mobile and tablet versions are still in development!");
+        switchScreen("mobile-screen");
+    }
+}
+checkScreenSize();
+// canv!.style.height = (window.innerHeight * 0.6) + "px"; 
+// canv!.style.width = (window.innerWidth *0.5) + "px"; 
 //music 
 if (!player || !volumeSliders || !playPauseButtons) {
     console.error("One or more elements not found.");
