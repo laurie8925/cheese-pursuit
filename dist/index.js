@@ -145,6 +145,7 @@ function switchScreenBtn(buttonId, screenId) {
 switchScreenBtn("start-btn", "game-screen");
 switchScreenBtn("instruction-btn", "instruction-screen");
 switchScreenBtn("music-btn", "music-screen");
+switchScreenBtn("credit-btn", "credit-screen");
 //for class buttons 
 function buttonQuery(btnClassName, screen) {
     document.addEventListener("DOMContentLoaded", () => {

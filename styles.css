@@ -12,6 +12,7 @@ body {
   background-image: url("medias/body-bg-edit.jpg");
 }
 
+h2,
 h3,
 h4,
 h5,
@@ -46,7 +47,8 @@ main {
 #instruction-screen,
 #gameover-screen,
 #menu-screen,
-#music-screen {
+#music-screen, 
+#credit-screen {
   background-image: url("medias/cheesy_bg.jpg");
   background-position: center;
   background-repeat: no-repeat;
@@ -67,25 +69,34 @@ main {
   justify-content: center;
   align-items: center;
   padding: 1rem;
-  border-radius: 25px;
+  border-radius: 50px;
   row-gap: 0.75rem;
   width: 450px;
   button {
-    width: 100px;
+    width: 150px;
     padding: 0.25rem;
     border-radius: 10px;
     border: none;
     background-color: rgb(255, 205, 40);
     font-family: "Poppins", Helvetica, sans-serif;
+    font-size: 1.2rem;
   }
   p,
   li {
-    font-size: 0.9rem;
+    font-size: 1.2rem;
   }
-  h3 {
+  h2 {
     margin: 0.5rem;
     font-size: 30px;
   }
+  h3{ 
+    font-size: 25px;
+  }
+}
+
+a, a:hover::after, a:hover {
+  text-decoration: none; 
+  color:#fff;
 }
 
 .music-container {
