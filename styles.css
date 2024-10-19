@@ -34,10 +34,12 @@ main {
   align-items: center;
 }
 
-.screen, 
-.gameCanvas{
-  width: 600px;
-  height: 500px;
+.screen{
+  width: 800px;
+  height: 700px;
+
+  /* width:60%; 
+  height:75%; */
 }
 
 #starting-screen,

@@ -224,8 +224,9 @@ function checkScreenSize() {
     }
 }
 checkScreenSize();
-// canv!.style.height = (window.innerHeight * 0.6) + "px"; 
-// canv!.style.width = (window.innerWidth *0.5) + "px"; 
+// const gameScreen = document.getElementById("game-screen") as HTMLElement;
+// canv!.height = gameScreen.offsetHeight;
+// canv!.width = gameScreen.offsetWidth;
 //music 
 if (!player || !volumeSliders || !playPauseButtons) {
     console.error("One or more elements not found.");
@@ -365,7 +366,7 @@ function destroyAsteroids(index) {
     asteroidDebris.push(asteroid);
     roids.splice(index, 1);
     //add one to score for destorying 
-    score = asteroidDebris.length;
+    score = asteroidDebris.length * 10 + level * 100;
     //spawn from one of the edges 
     const side = Math.floor(Math.random() * 4); //this will randomly determine which side to spawn 
     let x, y;
@@ -483,7 +484,7 @@ function gameOver() {
     clearInterval(checkGameId);
     clearInterval(gameLoop);
     pew.dead = true;
-    finalScore = level * 100 + score * 10;
+    finalScore = score;
     finalScoreDisplay.innerHTML = String(finalScore);
 }
 function newPew() {
@@ -516,12 +517,12 @@ function base() {
     // }
     // draw the clicked rectangle if it exists
     if (!clicked) {
-        ctx.drawImage(paw, pew.x, pew.y, pew.w * 1.2, pew.h * 1.7);
+        ctx.drawImage(paw, pew.x, pew.y, pew.w * 1.7, pew.h * 2.2);
     }
     else if (clickedRectangle && !pew.dead) { //activate cursor 
         const centerX = clickedRectangle.x + pew.w * 1.2 / 2;
         const centerY = clickedRectangle.y + pew.h * 1.7 / 2;
-        ctx.drawImage(paw, centerX - pew.w * 1.2 / 2, centerY - pew.h * 1.7 / 2, pew.w * 1.2, pew.h * 1.7);
+        ctx.drawImage(paw, centerX - pew.w * 1.7 / 2, centerY - pew.h * 2.2 / 2, pew.w * 1.7, pew.h * 2.2);
         if (SHOW_BOUNDING) {
             ctx.strokeStyle = "lime";
             ctx.beginPath();
@@ -552,7 +553,7 @@ function base() {
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillStyle = "rgba(255, 205, 40, " + textAlpha + ")";
-        ctx.font = "small-caps " + TEXT_SIZE + "px Josefin Sans";
+        ctx.font = "small-caps " + 40 + "px Josefin Sans";
         ctx.fillText(text, canv.width / 2, canv.height * 0.75);
         textAlpha -= (1.0 / TEXT_FADE / FPS);
     }
@@ -560,9 +561,10 @@ function base() {
     ctx.textAlign = "left";
     ctx.textBaseline = "middle";
     ctx.fillStyle = "rgba(255, 205, 40)";
-    ctx.font = 30 + "px Poppins";
+    ctx.font = 40 + "px Poppins";
+    const fixedWidth = 800;
     const scoreTxt = "Score: " + score.toString(); //turn into string 
-    ctx.fillText(scoreTxt, canv.width - 30 * 4.75, 30);
+    ctx.fillText(scoreTxt, fixedWidth - 230, 40);
     //draw timer
     let lowTime = false;
     if (timer.timer <= 4) {
@@ -571,12 +573,12 @@ function base() {
     ctx.textAlign = "left";
     ctx.textBaseline = "middle";
     ctx.fillStyle = lowTime ? "red" : "rgba(255, 205, 40)";
-    ctx.font = 20 + "px Poppins";
+    ctx.font = 30 + "px Poppins";
     let timerTxt = "Time: " + timer.timer.toString();
     if (timer.timer === 0) {
         timerTxt = "Timeout!";
     }
-    ctx.fillText(timerTxt, 15, 30);
+    ctx.fillText(timerTxt, 15, 40);
     //draw asteroids --------------------------------------
     // let x, y, r, a, vert, offs; 
     for (let i = 0; i < roids.length; i++) {
@@ -591,7 +593,7 @@ function base() {
         ctx.save();
         ctx.translate(roids[i].x, roids[i].y); //translate on roid's x and y position 
         ctx.rotate(rotate); //rotate to roid rotation
-        ctx.drawImage(mouse, -r, -r, r * 2, r * 2);
+        ctx.drawImage(mouse, -r * 1.5, -r * 1.5, r * 2.5, r * 2.5);
         ctx.restore();
         //handle edge of screen 
         //if go off screen, it will appear on the other side 
