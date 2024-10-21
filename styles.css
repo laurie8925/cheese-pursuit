@@ -96,7 +96,11 @@ main {
 
 a, a:hover::after, a:hover {
   text-decoration: none; 
-  color:#fff;
+  color:#b9babc;
+}
+
+#credit-screen .content .text{ 
+  text-align: center;
 }
 
 .music-container {
