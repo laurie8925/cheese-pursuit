@@ -182,8 +182,6 @@ function switchScreen(screenId) {
     });
     const element = document.getElementById(screenId);
     element.classList.remove("hidden");
-    // currentScreen = screenId;
-    // console.log(currentScreen); 
 }
 let isEscPressed = false;
 //handle escape menu screen
@@ -214,20 +212,22 @@ menuScreen();
 //
 // if screen smaller than 600/ 500 
 function checkScreenSize() {
-    switchScreen("starting-screen");
     // document.querySelectorAll<HTMLElement>(".screen").forEach(function(screen) {
     //   screen.style.height = (window.innerHeight * 0.6) + "px"; 
     //   screen.style.width = (window.innerWidth *0.5) + "px"; 
     // }); 
-    if (window.innerHeight <= 600 || window.innerWidth <= 500) {
+    if (window.innerHeight <= 700 || window.innerWidth <= 800) {
         console.log("Unfortunately, this game has only been developed for desktop at the moment. Mobile and tablet versions are still in development!");
         switchScreen("mobile-screen");
     }
+    else {
+        switchScreen("starting-screen");
+    }
 }
-checkScreenSize();
-// const gameScreen = document.getElementById("game-screen") as HTMLElement;
-// canv!.height = gameScreen.offsetHeight;
-// canv!.width = gameScreen.offsetWidth;
+window.addEventListener('resize', function () {
+    checkScreenSize();
+});
+switchScreen("starting-screen");
 //music 
 if (!player || !volumeSliders || !playPauseButtons) {
     console.error("One or more elements not found.");

@@ -47,7 +47,7 @@ main {
 #instruction-screen,
 #gameover-screen,
 #menu-screen,
-#music-screen, 
+#music-screen,
 #credit-screen {
   background-image: url("medias/cheesy_bg.jpg");
   background-position: center;
@@ -59,6 +59,14 @@ main {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+#mobile-screen{ 
+  width:75%; 
+  height:60%; 
+  display: flex;
+  justify-content: center;
+  text-align: center;
 }
 
 .content {
