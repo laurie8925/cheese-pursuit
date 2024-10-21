@@ -212,11 +212,8 @@ menuScreen();
 //
 // if screen smaller than 600/ 500 
 function checkScreenSize() {
-    // document.querySelectorAll<HTMLElement>(".screen").forEach(function(screen) {
-    //   screen.style.height = (window.innerHeight * 0.6) + "px"; 
-    //   screen.style.width = (window.innerWidth *0.5) + "px"; 
-    // }); 
-    if (window.innerHeight <= 700 || window.innerWidth <= 800) {
+    const isMobileUserAgent = /Mobi|Android/i.test(navigator.userAgent);
+    if (window.innerHeight <= 700 || window.innerWidth <= 800 || isMobileUserAgent) {
         console.log("Unfortunately, this game has only been developed for desktop at the moment. Mobile and tablet versions are still in development!");
         switchScreen("mobile-screen");
     }
@@ -227,7 +224,7 @@ function checkScreenSize() {
 window.addEventListener('resize', function () {
     checkScreenSize();
 });
-switchScreen("starting-screen");
+checkScreenSize();
 //music 
 if (!player || !volumeSliders || !playPauseButtons) {
     console.error("One or more elements not found.");

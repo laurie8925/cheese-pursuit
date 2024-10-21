@@ -33,6 +33,7 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
 }
 
 .screen{
@@ -67,6 +68,16 @@ main {
   display: flex;
   justify-content: center;
   text-align: center;
+
+  img{ 
+    width:70%;
+    height:60%; 
+
+    @media (max-width: 500px){ 
+      width: 250px;
+      height: 250px;
+    }
+  }
 }
 
 .content {
@@ -131,4 +142,9 @@ a, a:hover::after, a:hover {
     display: flex;
     width: 10%;
   }
+}
+
+.footer, .footer a{ 
+  font-weight: 1000;
+  color:black;
 }
