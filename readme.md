@@ -57,10 +57,6 @@ npm tsc -w
 * 1.1
     * Initial Release
 
-## License
-
-This project is licensed under the Laurie Yeh License 
-
 ## Acknowledgments
 
 Inspiration, code snippets, etc.
