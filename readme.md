@@ -49,9 +49,9 @@ npm tsc -w
 
 ## Authors
 
-Laurie Yeh
-[Portfolio](https://laurieyeh.com/)
-[Email](laurie.yeh@outlook.com)
+* Laurie Yeh
+* [Portfolio](https://laurieyeh.com/)
+* [Email](laurie.yeh@outlook.com)
 
 ## Version History
 
