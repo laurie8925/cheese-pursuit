@@ -21,7 +21,7 @@ In this TypeScript game, you’re a cat on a mission to catch cheese-stealing mi
 After cloning to your local environment, follow the following steps to run it on your local device! 
 
 * How to run the program
-1. Make sure you have Node.js installed, can check if you have it installed by checking the Node.js verison 
+#### 1. Make sure you have Node.js installed, can check if you have it installed by checking the Node.js verison 
 ```
 npm node -v
 ```
@@ -30,7 +30,7 @@ if you don't have Node.js installed, you can just install it with npm or yarn
 npm install nodejs
 ```
 
-2. Install typescript 
+#### 2. Install typescript 
 ```
 npm install typescript --save-dev
 ```
@@ -39,23 +39,22 @@ and you can check if it's instaleld by checking the version
 npm tsc -v
 ```
 
-3. Run typescript 
+#### 3. Run typescript 
 ```
 npm tsc -w
 ```
 
-4. Then you can just open the index.html file on your choice of browser! 
+#### 4. Then you can just open the index.html file on your choice of browser! 
 
 
 ## Authors
 
 * Laurie Yeh
-* [Portfolio](https://laurieyeh.com/)
-* [Email](laurie.yeh@outlook.com)
+
 
 ## Version History
 
-* 0.1
+* 1.1
     * Initial Release
 
 ## License
