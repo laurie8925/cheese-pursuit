@@ -1,36 +1,18 @@
 "use strict";
-/*TODO:
-- screens: start, insctrution, menu, losing, winning, exiting
-- button: start, instruction, mute/unmute, to homescreen, restart/ replay, resume, exit
-
-what to include in each screen
-start: start, instruction, mute/unmute
-instruction: back to homepage
-menu: mute/unmute, resume, restart, exit to losing screen
-losing: replay, back to homepage + level and score
-winning: replay, back to homepage
-
-add escape function to access menu page
-need to add pause and resume to game
-menu restart button doesn't work
- */
-/*FIXME:
-
-*/
-// constants 
+// constants
 const FPS = 30; //30 frames per sec
 let PEW_SIZE = 30; // pew frame size in pixels
-const ROIDS_NUM = 4; //starting number of asteroids 
+const ROIDS_NUM = 4; //starting number of asteroids
 const ROIDS_JAG = 0.4; //jaggedness of the asteroid (0 = none, 1 = lots)
 let ROIDS_SIZE = 70; //starting size of asteroids in pixels
-const MIN_ROID_SPD = 100; //min starting speed of asteroid in pixels per second 
-const ROIDS_SPD = 200; //max starting speed of asteroids in pixels per second 
-const ROIDS_VERT = 10; //average number of verticles on each asteroid 
-const EXPLODE_DUR = 0.3; //duratioin of the ship's explosion 
-const SHOW_BOUNDING = false; //show or hide collision bounding 
-const SHOW_CENTRE_DOT = false; //show or hide ship's center dot 
+const MIN_ROID_SPD = 100; //min starting speed of asteroid in pixels per second
+const ROIDS_SPD = 200; //max starting speed of asteroids in pixels per second
+const ROIDS_VERT = 10; //average number of verticles on each asteroid
+const EXPLODE_DUR = 0.3; //duratioin of the ship's explosion
+const SHOW_BOUNDING = false; //show or hide collision bounding
+const SHOW_CENTRE_DOT = false; //show or hide ship's center dot
 const TEXT_FADE = 2.5; // text fade time in seconds
-const TEXT_SIZE = 40; //text font height in pixels 
+const TEXT_SIZE = 40; //text font height in pixels
 let pewCollision = false;
 //DOM documents elements
 const canv = document.getElementById("gameCanvas");
@@ -47,9 +29,8 @@ const volumeDisplays = document.querySelectorAll(".volume-display");
 const volumeSvgs = document.querySelectorAll(".volume-svg");
 const playPauseButtons = document.querySelectorAll(".play");
 const mouseSound = new Audio("medias/mouse-squeak.m4a");
-// let currentScreen:string = "starting-screen"; 
 let gameActive = false;
-//set up game variables 
+//set up game variables
 let level;
 let pew;
 let roids;
@@ -68,7 +49,7 @@ const mouse = new Image();
 mouse.src = "medias/mouse.png";
 const paw = new Image();
 paw.src = "medias/cat_paw_2.png";
-//class 
+//class
 class Timer {
     constructor(initialTime) {
         this.initial = initialTime;
@@ -129,7 +110,7 @@ class Timer {
         this.intervalid = undefined;
     }
 }
-//event listener 
+//event listener
 //id button to swtich screen
 function switchScreenBtn(buttonId, screenId) {
     const button = document.getElementById(buttonId);
@@ -140,20 +121,19 @@ function switchScreenBtn(buttonId, screenId) {
         }
     });
 }
-;
 // switchScreen("starting-screen");
 switchScreenBtn("start-btn", "game-screen");
 switchScreenBtn("instruction-btn", "instruction-screen");
 switchScreenBtn("music-btn", "music-screen");
 switchScreenBtn("credit-btn", "credit-screen");
-//for class buttons 
+//for class buttons
 function buttonQuery(btnClassName, screen) {
     document.addEventListener("DOMContentLoaded", () => {
         let buttons = document.getElementsByClassName(btnClassName);
         for (let i = 0; i < buttons.length; i++) {
             const button = buttons[i];
             button.addEventListener("click", (event) => {
-                event.preventDefault(); // prevent default 
+                event.preventDefault(); // prevent default
                 event.stopImmediatePropagation(); // stop propagation
                 // Switch to the starting screen
                 switchScreen(screen);
@@ -172,10 +152,9 @@ function buttonQuery(btnClassName, screen) {
         }
     });
 }
-;
 buttonQuery("home-btn", "starting-screen");
 buttonQuery("game-btn", "game-screen");
-//switch screen management 
+//switch screen management
 function switchScreen(screenId) {
     document.querySelectorAll(".screen").forEach(function (screen) {
         screen.classList.add("hidden");
@@ -205,36 +184,32 @@ function menuScreen() {
         switchScreen("game-screen");
         timer.resume();
         isEscPressed = !isEscPressed;
-        ;
     });
 }
 menuScreen();
 //
-// if screen smaller than 600/ 500 
+// if screen smaller than 600/ 500
 function checkScreenSize() {
     const isMobileUserAgent = /Mobi|Android/i.test(navigator.userAgent);
-    if (window.innerHeight <= 700 || window.innerWidth <= 800 || isMobileUserAgent) {
+    if (window.innerHeight <= 700 ||
+        window.innerWidth <= 800 ||
+        isMobileUserAgent) {
         console.log("Unfortunately, this game has only been developed for desktop at the moment. Mobile and tablet versions are still in development!");
-        switchScreen("mobile-screen");
+        switchScreen("mobile-screenS");
     }
     else {
         switchScreen("starting-screen");
     }
 }
-window.addEventListener('resize', function () {
+window.addEventListener("resize", function () {
     checkScreenSize();
 });
 checkScreenSize();
-//music 
+//music
 if (!player || !volumeSliders || !playPauseButtons) {
     console.error("One or more elements not found.");
 }
 player.loop = true;
-// try {
-//   player.play();
-// } catch (error) {
-//   console.error('Playback failed:', error);
-// }
 function upatePlayButtons() {
     const pauseSvg = `
     <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-player-pause-filled" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffcd28" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -256,8 +231,7 @@ function upatePlayButtons() {
         }
     });
 }
-;
-upatePlayButtons(); //initial state 
+upatePlayButtons(); //initial state
 playPauseButtons.forEach((playPauseButton) => {
     playPauseButton.addEventListener("click", () => {
         if (!player.paused) {
@@ -266,25 +240,28 @@ playPauseButtons.forEach((playPauseButton) => {
         else {
             player.play();
         }
-        upatePlayButtons(); // if clicked, update buttons 
+        upatePlayButtons(); // if clicked, update buttons
     });
 });
 //event listener for volume slider
 volumeSliders.forEach((volumeSlider) => {
     function updateVolume(volume) {
+        //adjust volume based on slider position and updates all volume
         const currentVolume = volumeSlider.valueAsNumber;
         player.volume = currentVolume / 10;
         mouseSound.volume = currentVolume / 10;
         volumeDisplays.forEach((volumeDisplay) => {
-            volumeDisplay.textContent = `${(currentVolume)}`;
+            volumeDisplay.textContent = `${currentVolume}`;
         });
         volumeSlider.value = volume.toString();
-    } //end of updatevolume function 
+    } //end of updatevolume function
     function handleVolumeChange(event) {
+        //act as event handler, apply change to player volume and update display
         const target = event.target;
         const newValue = parseFloat(target.value);
         updateVolume(newValue);
-        volumeSvgs.forEach(volumeSvg => {
+        volumeSvgs.forEach((volumeSvg) => {
+            //for svg control
             if (newValue === 0) {
                 volumeSvg.innerHTML = `
         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-volume-3" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffcd28" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -310,20 +287,19 @@ volumeSliders.forEach((volumeSlider) => {
             <path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5" />
           </svg>`;
             }
-            ;
-        }); //end of svg control 
+        }); //end of svg control
     }
-    volumeSliders.forEach(control => {
-        control.addEventListener('input', handleVolumeChange);
+    volumeSliders.forEach((control) => {
+        control.addEventListener("input", handleVolumeChange);
     });
     setInterval(updateVolume, 100);
-}); //end of volume slider 
+}); //end of volume slider
 canv.addEventListener("click", handleCanvasClick);
 function handleCanvasClick(ev) {
     if (pew.dead) {
         return;
     }
-    // if (shipExploded) return; 
+    // if (shipExploded) return;
     ev.preventDefault();
     // calculate the position on the canvas
     const rectX = ev.clientX - canv.getBoundingClientRect().left;
@@ -335,7 +311,7 @@ function handleCanvasClick(ev) {
         const { x: ax, y: ay, r: ar } = roids[i];
         const { x: rx, y: ry, r: rr } = clickedRectangle;
         if (clickedRectangle && distanceBtwPts(rx, ry, ax, ay) < rr + ar) {
-            //check distance btw cursor and mouse 
+            //check distance btw cursor and mouse
             destroyAsteroids(i);
             pewCollision = false;
             break; // exit the loop as we have destroyed one asteroid
@@ -363,10 +339,10 @@ function destroyAsteroids(index) {
     }
     asteroidDebris.push(asteroid);
     roids.splice(index, 1);
-    //add one to score for destorying 
+    //add one to score for destorying
     score = asteroidDebris.length * 10 + level * 100;
-    //spawn from one of the edges 
-    const side = Math.floor(Math.random() * 4); //this will randomly determine which side to spawn 
+    //spawn from one of the edges
+    const side = Math.floor(Math.random() * 4); //this will randomly determine which side to spawn
     let x, y;
     switch (side) {
         case 0: //top
@@ -391,7 +367,8 @@ function destroyAsteroids(index) {
             break;
     }
     roids.push(newAsteroid(x, y, Math.ceil(ROIDS_SIZE / 2)));
-    if (asteroidDebris.length == 10) { //when hit 10 asteroid
+    if (asteroidDebris.length == 10) {
+        //when hit 10 asteroid
         //increase level
         newLevel();
         //increase difficulty when hit every 10 level
@@ -416,12 +393,12 @@ function newAsteroid(x, y, r) {
     let lvlMul = 1 + 0.2 * level;
     const centreX = canv.width / 2;
     const centreY = canv.height / 2;
-    //calculate direction from asteroid to center 
+    //calculate direction from asteroid to center
     const dx = centreX - x;
     const dy = centreY - y;
-    //caculate length of direction vector 
-    const unitX = dx / (Math.sqrt(dx * dx + dy * +dy));
-    const unitY = dy / (Math.sqrt(dx * dx + dy * +dy));
+    //caculate length of direction vector
+    const unitX = dx / Math.sqrt(dx * dx + dy * +dy);
+    const unitY = dy / Math.sqrt(dx * dx + dy * +dy);
     const speed = (Math.random() * lvlMul * (ROIDS_SPD - MIN_ROID_SPD) + MIN_ROID_SPD) / FPS;
     const direction = Math.random() < 0.5 ? 1 : -1; // math random if less than 0.5, go positive, otherwsie go negative
     let roid = {
@@ -429,9 +406,9 @@ function newAsteroid(x, y, r) {
         y: y,
         //x velocity
         xv: unitX * speed * direction,
-        //y velocity 
+        //y velocity
         yv: unitY * speed * direction,
-        r: r, //radius 
+        r: r, //radius
         a: Math.random() * Math.PI * 2, //angles in radians
         vert: Math.floor(Math.random() * (ROIDS_VERT + 1) + ROIDS_VERT / 2),
         offs: [],
@@ -474,7 +451,7 @@ function winGame() {
     clearInterval(checkGameId);
     clearInterval(gameLoop);
     pew.dead = true;
-    // textAlpha = 1; 
+    // textAlpha = 1;
 }
 function gameOver() {
     gameActive = !gameActive;
@@ -492,35 +469,26 @@ function newPew() {
         h: PEW_SIZE,
         w: PEW_SIZE,
         r: PEW_SIZE / 2, //radius
-        // a: 90 / 180 * Math.PI //convert to radian of 90 degrees 
+        // a: 90 / 180 * Math.PI //convert to radian of 90 degrees
         explodeTime: 0,
         dead: false,
     };
 }
 function base() {
-    //draw space 
+    //draw space
     ctx.fillStyle = "#537CBC";
     ctx.fillRect(0, 0, canv.width, canv.height); // draw a filled rectangle
     //draw pew (rectangle)---------------------------------------------------------
-    ctx.strokeStyle = "white",
-        ctx.lineWidth = PEW_SIZE / 20;
-    // determine if the pew is colliding with any asteroids
-    // if (clickedRectangle && !pew.dead) {
-    //   pewCollision = false; 
-    //   for (let i = 0; i < roids.length; i++) {
-    //     if (distanceBtwPts(clickedRectangle.x, clickedRectangle.y, roids[i].x, roids[i].y) < clickedRectangle.r + roids[i].r) { //check if it's in collision with asteroids 
-    //       pewCollision = true;
-    //     }
-    //   }
-    // }
+    (ctx.strokeStyle = "white"), (ctx.lineWidth = PEW_SIZE / 20);
     // draw the clicked rectangle if it exists
     if (!clicked) {
         ctx.drawImage(paw, pew.x, pew.y, pew.w * 1.7, pew.h * 2.2);
     }
-    else if (clickedRectangle && !pew.dead) { //activate cursor 
-        const centerX = clickedRectangle.x + pew.w * 1.2 / 2;
-        const centerY = clickedRectangle.y + pew.h * 1.7 / 2;
-        ctx.drawImage(paw, centerX - pew.w * 1.7 / 2, centerY - pew.h * 2.2 / 2, pew.w * 1.7, pew.h * 2.2);
+    else if (clickedRectangle && !pew.dead) {
+        //activate cursor
+        const centerX = clickedRectangle.x + (pew.w * 1.2) / 2;
+        const centerY = clickedRectangle.y + (pew.h * 1.7) / 2;
+        ctx.drawImage(paw, centerX - (pew.w * 1.7) / 2, centerY - (pew.h * 2.2) / 2, pew.w * 1.7, pew.h * 2.2);
         if (SHOW_BOUNDING) {
             ctx.strokeStyle = "lime";
             ctx.beginPath();
@@ -535,16 +503,6 @@ function base() {
         if (pew.dead) {
             return;
         }
-        // for(let i = 0; i < roids.length; i++){
-        //   const {x:ax, y:ay, r:ar} = roids[i]; 
-        //   const {x:rx, y:ry, r:rr} = clickedRectangle; 
-        //   if (clickedRectangle && distanceBtwPts(rx, ry, ax, ay) < rr+ ar) { 
-        //     //check distance btw cursor and mouse 
-        //     destroyAsteroids(i);
-        //     pewCollision = false;
-        //     break; // exit the loop as we have destroyed one asteroid
-        //   }
-        // } 
     }
     //text ---------------------------------------------
     if (textAlpha >= 0) {
@@ -553,7 +511,7 @@ function base() {
         ctx.fillStyle = "rgba(255, 205, 40, " + textAlpha + ")";
         ctx.font = "small-caps " + 40 + "px Josefin Sans";
         ctx.fillText(text, canv.width / 2, canv.height * 0.75);
-        textAlpha -= (1.0 / TEXT_FADE / FPS);
+        textAlpha -= 1.0 / TEXT_FADE / FPS;
     }
     //draw the score
     ctx.textAlign = "left";
@@ -561,7 +519,7 @@ function base() {
     ctx.fillStyle = "rgba(255, 205, 40)";
     ctx.font = 40 + "px Poppins";
     const fixedWidth = 800;
-    const scoreTxt = "Score: " + score.toString(); //turn into string 
+    const scoreTxt = "Score: " + score.toString(); //turn into string
     ctx.fillText(scoreTxt, fixedWidth - 230, 40);
     //draw timer
     let lowTime = false;
@@ -578,31 +536,31 @@ function base() {
     }
     ctx.fillText(timerTxt, 15, 40);
     //draw asteroids --------------------------------------
-    // let x, y, r, a, vert, offs; 
+    // let x, y, r, a, vert, offs;
     for (let i = 0; i < roids.length; i++) {
         ctx.strokeStyle = "slategrey";
         ctx.lineWidth = PEW_SIZE / 20;
-        //get the asteroid properties 
+        //get the asteroid properties
         const { x, y, r, a, vert, offs } = roids[i];
         //move the asteroid
         roids[i].x += roids[i].xv;
         roids[i].y += roids[i].yv;
-        const rotate = Math.atan2(roids[i].yv, roids[i].xv) + (90 * Math.PI / 180); //find angle + 1.5 to adjust angle facing
+        const rotate = Math.atan2(roids[i].yv, roids[i].xv) + (90 * Math.PI) / 180; //find angle + 1.5 to adjust angle facing
         ctx.save();
-        ctx.translate(roids[i].x, roids[i].y); //translate on roid's x and y position 
+        ctx.translate(roids[i].x, roids[i].y); //translate on roid's x and y position
         ctx.rotate(rotate); //rotate to roid rotation
         ctx.drawImage(mouse, -r * 1.5, -r * 1.5, r * 2.5, r * 2.5);
         ctx.restore();
-        //handle edge of screen 
-        //if go off screen, it will appear on the other side 
-        //x direction 
+        //handle edge of screen
+        //if go off screen, it will appear on the other side
+        //x direction
         if (roids[i].x < 0 - roids[i].r) {
             roids[i].x = canv.width + roids[i].r;
         }
         else if (roids[i].x > canv.width + roids[i].r) {
             roids[i].x = 0 - roids[i].r;
         }
-        //y direction 
+        //y direction
         if (roids[i].y < 0 - roids[i].r) {
             roids[i].y = canv.height + roids[i].r;
         }
